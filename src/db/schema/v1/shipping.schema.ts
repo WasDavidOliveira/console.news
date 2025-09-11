@@ -8,6 +8,7 @@ import {
 import { ShippingStatus } from '@/enums/v1/modules/shipping/shipping-status.enum';
 import { newsletter } from '@/db/schema/v1/newsletter.schema';
 import { user } from '@/db/schema/v1/user.schema';
+import { relations } from 'drizzle-orm';
 
 export const shipping = pgTable('shipping', {
   id: serial('id').primaryKey(),
@@ -25,3 +26,8 @@ export const shipping = pgTable('shipping', {
   createdAt: timestamp('created_at').defaultNow().notNull(),
   updatedAt: timestamp('updated_at').defaultNow().notNull(),
 });
+
+export const shippingRelations = relations(shipping, ({ one }) => ({
+  newsletter: one(newsletter),
+  user: one(user),
+}));

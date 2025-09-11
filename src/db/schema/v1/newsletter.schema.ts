@@ -1,4 +1,10 @@
-import { pgTable, serial, varchar, timestamp } from 'drizzle-orm/pg-core';
+import {
+  pgTable,
+  serial,
+  varchar,
+  timestamp,
+  integer,
+} from 'drizzle-orm/pg-core';
 import { relations } from 'drizzle-orm';
 import { categories } from '@/db/schema/v1/category.schema';
 import { NewsletterStatus } from '@/enums/v1/modules/newsletter/newsletter-status.enum';
@@ -6,6 +12,7 @@ import { NewsletterStatus } from '@/enums/v1/modules/newsletter/newsletter-statu
 export const newsletter = pgTable('newsletter', {
   id: serial('id').primaryKey(),
   title: varchar('title', { length: 255 }).notNull(),
+  categoryId: integer('category_id').references(() => categories.id),
   content: varchar('content', { length: 255 }).notNull(),
   subject: varchar('subject', { length: 255 }).notNull(),
   status: varchar('status', { length: 1 })
@@ -17,6 +24,9 @@ export const newsletter = pgTable('newsletter', {
   updatedAt: timestamp('updated_at').defaultNow().notNull(),
 });
 
-export const newsletterRelations = relations(newsletter, ({ many }) => ({
-  categories: many(categories),
+export const newsletterRelations = relations(newsletter, ({ one }) => ({
+  category: one(categories, {
+    fields: [newsletter.categoryId],
+    references: [categories.id],
+  }),
 }));
