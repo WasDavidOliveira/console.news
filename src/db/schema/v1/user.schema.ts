@@ -2,6 +2,7 @@ import { pgTable, serial, varchar, timestamp } from 'drizzle-orm/pg-core';
 import { relations } from 'drizzle-orm';
 import { userRoles } from '@/db/schema/v1/user-role.schema';
 import { UserStatus } from '@/enums/v1/modules/user/user-status.enum';
+import { shipping } from '@/db/schema/v1/shipping.schema';
 
 export const user = pgTable('users', {
   id: serial('id').primaryKey(),
@@ -17,4 +18,5 @@ export const user = pgTable('users', {
 
 export const userRelations = relations(user, ({ many }) => ({
   userRoles: many(userRoles),
+  shipping: many(shipping),
 }));

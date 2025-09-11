@@ -29,5 +29,8 @@ export const shipping = pgTable('shipping', {
 
 export const shippingRelations = relations(shipping, ({ one }) => ({
   newsletter: one(newsletter),
-  user: one(user),
+  user: one(user, {
+    fields: [shipping.userId],
+    references: [user.id],
+  }),
 }));
