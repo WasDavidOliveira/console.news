@@ -8,7 +8,7 @@ export const newsletter = pgTable('newsletter', {
   title: varchar('title', { length: 255 }).notNull(),
   content: varchar('content', { length: 255 }).notNull(),
   subject: varchar('subject', { length: 255 }).notNull(),
-  status: varchar('status', { length: 255 })
+  status: varchar('status', { length: 1 })
     .$type<NewsletterStatus>()
     .notNull()
     .default(NewsletterStatus.DRAFT),

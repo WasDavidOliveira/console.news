@@ -1,7 +1,7 @@
 export enum NewsletterStatus {
-  DRAFT = 'DRAFT',
-  SENT = 'SENT',
-  PUBLISHED = 'PUBLISHED',
-  CANCELLED = 'CANCELLED',
-  ARCHIVED = 'ARCHIVED',
+  DRAFT = 'D',
+  SENT = 'S',
+  PUBLISHED = 'P',
+  CANCELLED = 'C',
+  ARCHIVED = 'A',
 }
