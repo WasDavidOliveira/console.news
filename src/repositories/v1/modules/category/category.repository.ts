@@ -45,6 +45,10 @@ export class CategoryRepository {
 
     return newCategory;
   }
+
+  async delete(id: number): Promise<void> {
+    await db.delete(categories).where(eq(categories.id, id));
+  }
 }
 
 export default new CategoryRepository();
