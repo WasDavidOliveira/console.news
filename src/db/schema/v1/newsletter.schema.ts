@@ -4,6 +4,7 @@ import {
   varchar,
   timestamp,
   integer,
+  text
 } from 'drizzle-orm/pg-core';
 import { relations } from 'drizzle-orm';
 import { categories } from '@/db/schema/v1/category.schema';
@@ -14,7 +15,7 @@ export const newsletter = pgTable('newsletter', {
   id: serial('id').primaryKey(),
   title: varchar('title', { length: 255 }).notNull(),
   categoryId: integer('category_id').references(() => categories.id),
-  content: varchar('content', { length: 255 }).notNull(),
+  content: text('content').notNull(),
   subject: varchar('subject', { length: 255 }).notNull(),
   status: varchar('status', { length: 1 })
     .$type<NewsletterStatus>()
