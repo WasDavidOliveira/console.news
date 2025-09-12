@@ -4,7 +4,7 @@ import {
   varchar,
   timestamp,
   integer,
-  text
+  text,
 } from 'drizzle-orm/pg-core';
 import { relations } from 'drizzle-orm';
 import { categories } from '@/db/schema/v1/category.schema';

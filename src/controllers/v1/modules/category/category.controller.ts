@@ -1,9 +1,4 @@
 import { Request, Response } from 'express';
-import {
-  CreateCategorySchema,
-  UpdateCategorySchema,
-  CategoryParamsSchema,
-} from '@/validations/v1/modules/category.validations';
 import CategoryService from '@/services/v1/modules/category/category.service';
 import { StatusCode } from '@/constants/status-code.constants';
 
@@ -38,7 +33,10 @@ export class CategoryController {
   };
 
   update = async (req: Request, res: Response) => {
-    const category = await this.categoryService.update(Number(req.params.id), req.body);
+    const category = await this.categoryService.update(
+      Number(req.params.id),
+      req.body,
+    );
 
     res.status(StatusCode.OK).json({
       message: 'Categoria atualizada com sucesso.',
