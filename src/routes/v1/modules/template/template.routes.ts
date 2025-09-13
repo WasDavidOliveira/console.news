@@ -13,7 +13,7 @@ const router: Router = Router();
 router.get(
   '/',
   validateRequest(templateQuerySchema),
-  TemplateController.show,
+  TemplateController.index,
 );
 
 router.get(
@@ -24,7 +24,7 @@ router.get(
 router.get(
   '/:id',
   validateRequest(templateParamsSchema),
-  TemplateController.findById,
+  TemplateController.show,
 );
 
 router.post(

@@ -11,9 +11,9 @@ export class TemplateController {
     this.templateService = new TemplateService();
   }
 
-  show = async (req: Request, res: Response) => {
+  index = async (req: Request, res: Response) => {
     const query = req.query as TemplateQuerySchema;
-    const templates = await this.templateService.show(query);
+    const templates = await this.templateService.index(query);
 
     res.status(StatusCode.OK).json({
       message: 'Templates encontrados com sucesso.',
@@ -21,8 +21,8 @@ export class TemplateController {
     });
   };
 
-  findById = async (req: Request, res: Response) => {
-    const template = await this.templateService.findById(Number(req.params.id));
+  show = async (req: Request, res: Response) => {
+    const template = await this.templateService.show(Number(req.params.id));
 
     res.status(StatusCode.OK).json({
       message: 'Template encontrado com sucesso.',
@@ -78,7 +78,7 @@ export class TemplateController {
   };
 
   preview = async (req: Request, res: Response) => {
-    const templates = await this.templateService.show({ active: true });
+    const templates = await this.templateService.getActiveTemplates();
 
     res.status(StatusCode.OK).json({
       message: 'Templates para preview encontrados com sucesso.',

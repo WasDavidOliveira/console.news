@@ -7,7 +7,7 @@ import {
 } from '@/validations/v1/modules/template.validations';
 
 export class TemplateService {
-  async show(query?: TemplateQuerySchema) {
+  async index(query?: TemplateQuerySchema) {
     if (query?.active !== undefined) {
       const templates = await TemplateRepository.findByActive(query.active);
       return templates;
@@ -15,6 +15,16 @@ export class TemplateService {
 
     const templates = await TemplateRepository.findAll();
     return templates;
+  }
+
+  async show(id: number) {
+    const template = await TemplateRepository.findById(id);
+
+    if (!template) {
+      throw new NotFoundError('Template não encontrado');
+    }
+
+    return template;
   }
 
   async findById(id: number) {
@@ -81,6 +91,11 @@ export class TemplateService {
     });
 
     return deactivatedTemplate;
+  }
+
+  async getActiveTemplates() {
+    const templates = await TemplateRepository.findByActive(true);
+    return templates;
   }
 }
 
