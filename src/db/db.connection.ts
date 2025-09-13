@@ -9,9 +9,13 @@ import {
   rolePermissionRelations,
 } from '@/db/schema/v1/role-permission.schema';
 import { userRoles, userRoleRelations } from '@/db/schema/v1/user-role.schema';
+import { templates } from '@/db/schema/v1/template.schema';
+import { categories } from '@/db/schema/v1/category.schema';
 import appConfig from '@/configs/app.config';
 import { drizzle } from 'drizzle-orm/node-postgres';
 import { Pool } from 'pg';
+import { shipping, shippingRelations } from '@/db/schema/v1/shipping.schema';
+import { newsletter, newsletterRelations } from '@/db/schema/v1/newsletter.schema';
 
 const pool = new Pool({
   connectionString: appConfig.databaseUrl,
@@ -30,5 +34,11 @@ export const db = drizzle(pool, {
     rolePermissionRelations,
     userRoles,
     userRoleRelations,
+    templates,
+    categories,
+    shipping,
+    shippingRelations,
+    newsletter,
+    newsletterRelations
   },
 });
