@@ -1,9 +1,13 @@
 import { Request, Response } from 'express';
-import CategoryService from '@/services/v1/modules/category/category.service';
+import { CategoryService } from '@/services/v1/modules/category/category.service';
 import { StatusCode } from '@/constants/status-code.constants';
 
 export class CategoryController {
-  constructor(protected readonly categoryService: typeof CategoryService) {}
+  protected categoryService: CategoryService;
+
+  constructor() {
+    this.categoryService = new CategoryService();
+  }
 
   show = async (req: Request, res: Response) => {
     const categories = await this.categoryService.show();
@@ -53,4 +57,4 @@ export class CategoryController {
   };
 }
 
-export default new CategoryController(CategoryService);
+export default new CategoryController();

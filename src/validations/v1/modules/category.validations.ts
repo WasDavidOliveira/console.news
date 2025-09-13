@@ -67,6 +67,6 @@ export const categoryParamsSchema = z.object({
   }),
 });
 
-export type CreateCategorySchema = z.infer<typeof createCategorySchema>;
-export type UpdateCategorySchema = z.infer<typeof updateCategorySchema>;
+export type CreateCategorySchema = z.infer<typeof createCategorySchema>['body'];
+export type UpdateCategorySchema = z.infer<typeof updateCategorySchema>['body'];
 export type CategoryParamsSchema = z.infer<typeof categoryParamsSchema>;
