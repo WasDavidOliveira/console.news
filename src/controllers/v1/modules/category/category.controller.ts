@@ -47,7 +47,7 @@ export class CategoryController {
   delete = async (req: Request, res: Response) => {
     await this.categoryService.delete(Number(req.params.id));
 
-    res.status(StatusCode.NO_CONTENT).json({
+    res.status(StatusCode.OK).json({
       message: 'Categoria removida com sucesso.',
     });
   };
