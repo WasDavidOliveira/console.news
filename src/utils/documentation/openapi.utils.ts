@@ -18,6 +18,12 @@ import {
   templateParamsSchema,
   templateQuerySchema,
 } from '@/validations/v1/modules/template.validations';
+import {
+  createSubscriptionSchema,
+  updateSubscriptionSchema,
+  subscriptionParamsSchema,
+  subscriptionQuerySchema,
+} from '@/validations/v1/modules/subscription.validations';
 
 export const generateOpenAPIDocument = () => {
   const loginResponseSchema = z
@@ -290,6 +296,118 @@ export const generateOpenAPIDocument = () => {
     .openapi({
       ref: 'TemplatePreviewResponse',
       description: 'Resposta de preview do template',
+    });
+
+  // Schemas de resposta para Subscription
+  const subscriptionResponseSchema = z
+    .object({
+      id: z.number().openapi({
+        description: 'ID único da inscrição',
+        example: 1,
+      }),
+      userId: z.number().openapi({
+        description: 'ID do usuário',
+        example: 1,
+      }),
+      status: z.string().openapi({
+        description: 'Status da inscrição',
+        example: 'A',
+      }),
+      isActive: z.boolean().openapi({
+        description: 'Status de ativação da inscrição',
+        example: true,
+      }),
+      createdAt: z.string().openapi({
+        description: 'Data de criação',
+        example: '2024-01-15T10:30:00Z',
+      }),
+      updatedAt: z.string().openapi({
+        description: 'Data de atualização',
+        example: '2024-01-15T10:30:00Z',
+      }),
+    })
+    .openapi({
+      ref: 'SubscriptionResponse',
+      description: 'Dados de uma inscrição',
+    });
+
+  const subscriptionListResponseSchema = z
+    .object({
+      message: z.string().openapi({
+        description: 'Mensagem de sucesso',
+        example: 'Inscrições encontradas com sucesso',
+      }),
+      data: z.array(subscriptionResponseSchema).openapi({
+        description: 'Lista de inscrições',
+      }),
+    })
+    .openapi({
+      ref: 'SubscriptionListResponse',
+      description: 'Resposta com lista de inscrições',
+    });
+
+  const subscriptionCreateResponseSchema = z
+    .object({
+      message: z.string().openapi({
+        description: 'Mensagem de sucesso',
+        example: 'Inscrição criada com sucesso',
+      }),
+      data: subscriptionResponseSchema,
+    })
+    .openapi({
+      ref: 'SubscriptionCreateResponse',
+      description: 'Resposta de criação de inscrição',
+    });
+
+  const subscriptionUpdateResponseSchema = z
+    .object({
+      message: z.string().openapi({
+        description: 'Mensagem de sucesso',
+        example: 'Inscrição atualizada com sucesso',
+      }),
+      data: subscriptionResponseSchema,
+    })
+    .openapi({
+      ref: 'SubscriptionUpdateResponse',
+      description: 'Resposta de atualização de inscrição',
+    });
+
+  const subscriptionActivateResponseSchema = z
+    .object({
+      message: z.string().openapi({
+        description: 'Mensagem de sucesso',
+        example: 'Inscrição ativada com sucesso',
+      }),
+      data: subscriptionResponseSchema,
+    })
+    .openapi({
+      ref: 'SubscriptionActivateResponse',
+      description: 'Resposta de ativação de inscrição',
+    });
+
+  const subscriptionDeactivateResponseSchema = z
+    .object({
+      message: z.string().openapi({
+        description: 'Mensagem de sucesso',
+        example: 'Inscrição desativada com sucesso',
+      }),
+      data: subscriptionResponseSchema,
+    })
+    .openapi({
+      ref: 'SubscriptionDeactivateResponse',
+      description: 'Resposta de desativação de inscrição',
+    });
+
+  const subscriptionDeleteResponseSchema = z
+    .object({
+      message: z.string().openapi({
+        description: 'Mensagem de sucesso',
+        example: 'Inscrição removida com sucesso',
+      }),
+    })
+    .openapi({
+      ref: 'SubscriptionDeleteResponse',
+      description: 'Resposta de remoção de inscrição',
     });
 
   // Schemas de resposta para Health Check
@@ -1093,6 +1211,285 @@ export const generateOpenAPIDocument = () => {
             },
             404: {
               description: 'Template não encontrado',
+            },
+          },
+        },
+      },
+      // Rotas de Subscription
+      '/api/v1/subscriptions': {
+        get: {
+          tags: ['Inscrições'],
+          summary: 'Listar inscrições',
+          description: 'Endpoint para listar inscrições com filtros opcionais',
+          parameters: [
+            {
+              name: 'status',
+              in: 'query',
+              required: false,
+              description: 'Filtrar por status da inscrição',
+              schema: {
+                type: 'string',
+                enum: ['A', 'I', 'C'],
+                example: 'A',
+              },
+            },
+            {
+              name: 'isActive',
+              in: 'query',
+              required: false,
+              description: 'Filtrar por status de ativação',
+              schema: {
+                type: 'boolean',
+                example: true,
+              },
+            },
+          ],
+          responses: {
+            200: {
+              description: 'Inscrições listadas com sucesso',
+              content: {
+                'application/json': {
+                  schema: subscriptionListResponseSchema,
+                },
+              },
+            },
+          },
+        },
+        post: {
+          tags: ['Inscrições'],
+          summary: 'Criar inscrição',
+          description: 'Endpoint para criar uma nova inscrição. Se o usuário não existir, será criado automaticamente. Apenas uma inscrição ativa por usuário é permitida.',
+          requestBody: {
+            required: true,
+            content: {
+              'application/json': {
+                schema: createSubscriptionSchema.shape.body,
+              },
+            },
+          },
+          responses: {
+            201: {
+              description: 'Inscrição criada com sucesso',
+              content: {
+                'application/json': {
+                  schema: subscriptionCreateResponseSchema,
+                },
+              },
+            },
+            400: {
+              description: 'Dados inválidos',
+            },
+            409: {
+              description: 'Usuário já possui uma inscrição ativa',
+            },
+          },
+        },
+      },
+      '/api/v1/subscriptions/email/{email}': {
+        get: {
+          tags: ['Inscrições'],
+          summary: 'Buscar inscrições por email',
+          description: 'Endpoint para buscar inscrições de um usuário específico pelo email',
+          parameters: [
+            {
+              name: 'email',
+              in: 'path',
+              required: true,
+              description: 'Email do usuário',
+              schema: {
+                type: 'string',
+                format: 'email',
+                example: 'joao@email.com',
+              },
+            },
+          ],
+          responses: {
+            200: {
+              description: 'Inscrições encontradas com sucesso',
+              content: {
+                'application/json': {
+                  schema: subscriptionListResponseSchema,
+                },
+              },
+            },
+          },
+        },
+      },
+      '/api/v1/subscriptions/{id}': {
+        get: {
+          tags: ['Inscrições'],
+          summary: 'Buscar inscrição por ID',
+          description: 'Endpoint para buscar uma inscrição específica pelo ID',
+          parameters: [
+            {
+              name: 'id',
+              in: 'path',
+              required: true,
+              description: 'ID da inscrição',
+              schema: {
+                type: 'integer',
+                example: 1,
+              },
+            },
+          ],
+          responses: {
+            200: {
+              description: 'Inscrição encontrada com sucesso',
+              content: {
+                'application/json': {
+                  schema: subscriptionResponseSchema,
+                },
+              },
+            },
+            400: {
+              description: 'ID inválido',
+            },
+            404: {
+              description: 'Inscrição não encontrada',
+            },
+          },
+        },
+        put: {
+          tags: ['Inscrições'],
+          summary: 'Atualizar inscrição',
+          description: 'Endpoint para atualizar uma inscrição existente',
+          parameters: [
+            {
+              name: 'id',
+              in: 'path',
+              required: true,
+              description: 'ID da inscrição',
+              schema: {
+                type: 'integer',
+                example: 1,
+              },
+            },
+          ],
+          requestBody: {
+            required: true,
+            content: {
+              'application/json': {
+                schema: updateSubscriptionSchema.shape.body,
+              },
+            },
+          },
+          responses: {
+            200: {
+              description: 'Inscrição atualizada com sucesso',
+              content: {
+                'application/json': {
+                  schema: subscriptionUpdateResponseSchema,
+                },
+              },
+            },
+            400: {
+              description: 'Dados inválidos',
+            },
+            404: {
+              description: 'Inscrição não encontrada',
+            },
+          },
+        },
+        delete: {
+          tags: ['Inscrições'],
+          summary: 'Excluir inscrição',
+          description: 'Endpoint para excluir uma inscrição',
+          parameters: [
+            {
+              name: 'id',
+              in: 'path',
+              required: true,
+              description: 'ID da inscrição',
+              schema: {
+                type: 'integer',
+                example: 1,
+              },
+            },
+          ],
+          responses: {
+            200: {
+              description: 'Inscrição removida com sucesso',
+              content: {
+                'application/json': {
+                  schema: subscriptionDeleteResponseSchema,
+                },
+              },
+            },
+            400: {
+              description: 'ID inválido',
+            },
+            404: {
+              description: 'Inscrição não encontrada',
+            },
+          },
+        },
+      },
+      '/api/v1/subscriptions/{id}/activate': {
+        patch: {
+          tags: ['Inscrições'],
+          summary: 'Ativar inscrição',
+          description: 'Endpoint para ativar uma inscrição',
+          parameters: [
+            {
+              name: 'id',
+              in: 'path',
+              required: true,
+              description: 'ID da inscrição',
+              schema: {
+                type: 'integer',
+                example: 1,
+              },
+            },
+          ],
+          responses: {
+            200: {
+              description: 'Inscrição ativada com sucesso',
+              content: {
+                'application/json': {
+                  schema: subscriptionActivateResponseSchema,
+                },
+              },
+            },
+            400: {
+              description: 'ID inválido',
+            },
+            404: {
+              description: 'Inscrição não encontrada',
+            },
+          },
+        },
+      },
+      '/api/v1/subscriptions/{id}/deactivate': {
+        patch: {
+          tags: ['Inscrições'],
+          summary: 'Desativar inscrição',
+          description: 'Endpoint para desativar uma inscrição',
+          parameters: [
+            {
+              name: 'id',
+              in: 'path',
+              required: true,
+              description: 'ID da inscrição',
+              schema: {
+                type: 'integer',
+                example: 1,
+              },
+            },
+          ],
+          responses: {
+            200: {
+              description: 'Inscrição desativada com sucesso',
+              content: {
+                'application/json': {
+                  schema: subscriptionDeactivateResponseSchema,
+                },
+              },
+            },
+            400: {
+              description: 'ID inválido',
+            },
+            404: {
+              description: 'Inscrição não encontrada',
             },
           },
         },

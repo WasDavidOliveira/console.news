@@ -919,6 +919,357 @@
           }
         }
       }
+    },
+    "/api/v1/subscriptions": {
+      "get": {
+        "tags": [
+          "Inscrições"
+        ],
+        "summary": "Listar inscrições",
+        "description": "Endpoint para listar inscrições com filtros opcionais",
+        "parameters": [
+          {
+            "name": "status",
+            "in": "query",
+            "required": false,
+            "description": "Filtrar por status da inscrição",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "A",
+                "I",
+                "C"
+              ],
+              "example": "A"
+            }
+          },
+          {
+            "name": "isActive",
+            "in": "query",
+            "required": false,
+            "description": "Filtrar por status de ativação",
+            "schema": {
+              "type": "boolean",
+              "example": true
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Inscrições listadas com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SubscriptionListResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Inscrições"
+        ],
+        "summary": "Criar inscrição",
+        "description": "Endpoint para criar uma nova inscrição. Se o usuário não existir, será criado automaticamente. Apenas uma inscrição ativa por usuário é permitida.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 50,
+                    "example": "João Silva"
+                  },
+                  "email": {
+                    "type": "string",
+                    "format": "email",
+                    "maxLength": 100,
+                    "example": "joao@email.com"
+                  }
+                },
+                "required": [
+                  "name",
+                  "email"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Inscrição criada com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SubscriptionCreateResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Dados inválidos"
+          },
+          "409": {
+            "description": "Usuário já possui uma inscrição ativa"
+          }
+        }
+      }
+    },
+    "/api/v1/subscriptions/email/{email}": {
+      "get": {
+        "tags": [
+          "Inscrições"
+        ],
+        "summary": "Buscar inscrições por email",
+        "description": "Endpoint para buscar inscrições de um usuário específico pelo email",
+        "parameters": [
+          {
+            "name": "email",
+            "in": "path",
+            "required": true,
+            "description": "Email do usuário",
+            "schema": {
+              "type": "string",
+              "format": "email",
+              "example": "joao@email.com"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Inscrições encontradas com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SubscriptionListResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/subscriptions/{id}": {
+      "get": {
+        "tags": [
+          "Inscrições"
+        ],
+        "summary": "Buscar inscrição por ID",
+        "description": "Endpoint para buscar uma inscrição específica pelo ID",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "ID da inscrição",
+            "schema": {
+              "type": "integer",
+              "example": 1
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Inscrição encontrada com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SubscriptionResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "ID inválido"
+          },
+          "404": {
+            "description": "Inscrição não encontrada"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Inscrições"
+        ],
+        "summary": "Atualizar inscrição",
+        "description": "Endpoint para atualizar uma inscrição existente",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "ID da inscrição",
+            "schema": {
+              "type": "integer",
+              "example": 1
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "status": {
+                    "type": "string",
+                    "enum": [
+                      "A",
+                      "I",
+                      "C"
+                    ],
+                    "example": "I"
+                  },
+                  "isActive": {
+                    "type": "boolean",
+                    "example": false
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Inscrição atualizada com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SubscriptionUpdateResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Dados inválidos"
+          },
+          "404": {
+            "description": "Inscrição não encontrada"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Inscrições"
+        ],
+        "summary": "Excluir inscrição",
+        "description": "Endpoint para excluir uma inscrição",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "ID da inscrição",
+            "schema": {
+              "type": "integer",
+              "example": 1
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Inscrição removida com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SubscriptionDeleteResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "ID inválido"
+          },
+          "404": {
+            "description": "Inscrição não encontrada"
+          }
+        }
+      }
+    },
+    "/api/v1/subscriptions/{id}/activate": {
+      "patch": {
+        "tags": [
+          "Inscrições"
+        ],
+        "summary": "Ativar inscrição",
+        "description": "Endpoint para ativar uma inscrição",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "ID da inscrição",
+            "schema": {
+              "type": "integer",
+              "example": 1
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Inscrição ativada com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SubscriptionActivateResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "ID inválido"
+          },
+          "404": {
+            "description": "Inscrição não encontrada"
+          }
+        }
+      }
+    },
+    "/api/v1/subscriptions/{id}/deactivate": {
+      "patch": {
+        "tags": [
+          "Inscrições"
+        ],
+        "summary": "Desativar inscrição",
+        "description": "Endpoint para desativar uma inscrição",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "ID da inscrição",
+            "schema": {
+              "type": "integer",
+              "example": 1
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Inscrição desativada com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SubscriptionDeactivateResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "ID inválido"
+          },
+          "404": {
+            "description": "Inscrição não encontrada"
+          }
+        }
+      }
     }
   },
   "components": {
@@ -1555,6 +1906,158 @@
           "data"
         ],
         "description": "Resposta de desativação de template"
+      },
+      "SubscriptionListResponse": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string",
+            "description": "Mensagem de sucesso",
+            "example": "Inscrições encontradas com sucesso"
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SubscriptionResponse"
+            },
+            "description": "Lista de inscrições"
+          }
+        },
+        "required": [
+          "message",
+          "data"
+        ],
+        "description": "Resposta com lista de inscrições"
+      },
+      "SubscriptionResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number",
+            "description": "ID único da inscrição",
+            "example": 1
+          },
+          "userId": {
+            "type": "number",
+            "description": "ID do usuário",
+            "example": 1
+          },
+          "status": {
+            "type": "string",
+            "description": "Status da inscrição",
+            "example": "A"
+          },
+          "isActive": {
+            "type": "boolean",
+            "description": "Status de ativação da inscrição",
+            "example": true
+          },
+          "createdAt": {
+            "type": "string",
+            "description": "Data de criação",
+            "example": "2024-01-15T10:30:00Z"
+          },
+          "updatedAt": {
+            "type": "string",
+            "description": "Data de atualização",
+            "example": "2024-01-15T10:30:00Z"
+          }
+        },
+        "required": [
+          "id",
+          "userId",
+          "status",
+          "isActive",
+          "createdAt",
+          "updatedAt"
+        ],
+        "description": "Dados de uma inscrição"
+      },
+      "SubscriptionCreateResponse": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string",
+            "description": "Mensagem de sucesso",
+            "example": "Inscrição criada com sucesso"
+          },
+          "data": {
+            "$ref": "#/components/schemas/SubscriptionResponse"
+          }
+        },
+        "required": [
+          "message",
+          "data"
+        ],
+        "description": "Resposta de criação de inscrição"
+      },
+      "SubscriptionUpdateResponse": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string",
+            "description": "Mensagem de sucesso",
+            "example": "Inscrição atualizada com sucesso"
+          },
+          "data": {
+            "$ref": "#/components/schemas/SubscriptionResponse"
+          }
+        },
+        "required": [
+          "message",
+          "data"
+        ],
+        "description": "Resposta de atualização de inscrição"
+      },
+      "SubscriptionDeleteResponse": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string",
+            "description": "Mensagem de sucesso",
+            "example": "Inscrição removida com sucesso"
+          }
+        },
+        "required": [
+          "message"
+        ],
+        "description": "Resposta de remoção de inscrição"
+      },
+      "SubscriptionActivateResponse": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string",
+            "description": "Mensagem de sucesso",
+            "example": "Inscrição ativada com sucesso"
+          },
+          "data": {
+            "$ref": "#/components/schemas/SubscriptionResponse"
+          }
+        },
+        "required": [
+          "message",
+          "data"
+        ],
+        "description": "Resposta de ativação de inscrição"
+      },
+      "SubscriptionDeactivateResponse": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string",
+            "description": "Mensagem de sucesso",
+            "example": "Inscrição desativada com sucesso"
+          },
+          "data": {
+            "$ref": "#/components/schemas/SubscriptionResponse"
+          }
+        },
+        "required": [
+          "message",
+          "data"
+        ],
+        "description": "Resposta de desativação de inscrição"
       }
     }
   }
