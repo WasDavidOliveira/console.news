@@ -11,7 +11,7 @@ import { hasRole } from '@/middlewares/authorization/role.middleware';
 
 const router: Router = Router();
 
-router.use('/health', healthRoutes);
+router.use('/health', authMiddleware, hasRole('admin'), healthRoutes);
 router.use('/auth', authRoutes);
 router.use('/permissions', authMiddleware, permissionRoutes);
 router.use('/roles', authMiddleware, roleRoutes);
