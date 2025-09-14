@@ -12,6 +12,58 @@
     }
   ],
   "paths": {
+    "/api/v1/health": {
+      "get": {
+        "tags": [
+          "Health Check"
+        ],
+        "summary": "Health check simples",
+        "description": "Endpoint para verificar se a API está funcionando",
+        "responses": {
+          "200": {
+            "description": "API funcionando corretamente",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HealthSimpleResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/health/detailed": {
+      "get": {
+        "tags": [
+          "Health Check"
+        ],
+        "summary": "Health check detalhado",
+        "description": "Endpoint para verificar o status detalhado da API incluindo banco de dados e métricas",
+        "responses": {
+          "200": {
+            "description": "API funcionando corretamente com todos os serviços",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HealthDetailedResponse"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "API com problemas - algum serviço indisponível",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HealthErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/v1/auth/login": {
       "post": {
         "tags": [
@@ -878,6 +930,171 @@
       }
     },
     "schemas": {
+      "HealthSimpleResponse": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string",
+            "description": "Status da API",
+            "example": "OK"
+          },
+          "timestamp": {
+            "type": "string",
+            "description": "Timestamp da verificação",
+            "example": "2024-01-15T10:30:00.000Z"
+          }
+        },
+        "required": [
+          "message",
+          "timestamp"
+        ],
+        "description": "Resposta simples de health check"
+      },
+      "HealthDetailedResponse": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string",
+            "description": "Mensagem de status da API",
+            "example": "API está funcionando corretamente"
+          },
+          "data": {
+            "type": "object",
+            "properties": {
+              "status": {
+                "type": "string",
+                "description": "Status da aplicação",
+                "example": "healthy"
+              },
+              "timestamp": {
+                "type": "string",
+                "description": "Timestamp da verificação",
+                "example": "2024-01-15T10:30:00.000Z"
+              },
+              "uptime": {
+                "type": "number",
+                "description": "Tempo de execução em segundos",
+                "example": 3600.5
+              },
+              "environment": {
+                "type": "string",
+                "description": "Ambiente de execução",
+                "example": "development"
+              },
+              "version": {
+                "type": "string",
+                "description": "Versão da aplicação",
+                "example": "1.0.0"
+              },
+              "database": {
+                "type": "string",
+                "description": "Status da conexão com o banco",
+                "example": "connected"
+              },
+              "memory": {
+                "type": "object",
+                "properties": {
+                  "used": {
+                    "type": "number",
+                    "description": "Memória usada em MB",
+                    "example": 45.67
+                  },
+                  "total": {
+                    "type": "number",
+                    "description": "Memória total em MB",
+                    "example": 128
+                  }
+                },
+                "required": [
+                  "used",
+                  "total"
+                ],
+                "description": "Informações de memória"
+              }
+            },
+            "required": [
+              "status",
+              "timestamp",
+              "uptime",
+              "environment",
+              "version",
+              "database",
+              "memory"
+            ],
+            "description": "Dados detalhados do health check"
+          }
+        },
+        "required": [
+          "message",
+          "data"
+        ],
+        "description": "Resposta detalhada de health check"
+      },
+      "HealthErrorResponse": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string",
+            "description": "Mensagem de erro",
+            "example": "API está com problemas"
+          },
+          "data": {
+            "type": "object",
+            "properties": {
+              "status": {
+                "type": "string",
+                "description": "Status da aplicação",
+                "example": "unhealthy"
+              },
+              "timestamp": {
+                "type": "string",
+                "description": "Timestamp da verificação",
+                "example": "2024-01-15T10:30:00.000Z"
+              },
+              "uptime": {
+                "type": "number",
+                "description": "Tempo de execução em segundos",
+                "example": 3600.5
+              },
+              "environment": {
+                "type": "string",
+                "description": "Ambiente de execução",
+                "example": "development"
+              },
+              "version": {
+                "type": "string",
+                "description": "Versão da aplicação",
+                "example": "1.0.0"
+              },
+              "database": {
+                "type": "string",
+                "description": "Status da conexão com o banco",
+                "example": "disconnected"
+              },
+              "error": {
+                "type": "string",
+                "description": "Mensagem de erro",
+                "example": "Connection timeout"
+              }
+            },
+            "required": [
+              "status",
+              "timestamp",
+              "uptime",
+              "environment",
+              "version",
+              "database",
+              "error"
+            ],
+            "description": "Dados de erro do health check"
+          }
+        },
+        "required": [
+          "message",
+          "data"
+        ],
+        "description": "Resposta de erro do health check"
+      },
       "LoginInput": {
         "type": "object",
         "properties": {

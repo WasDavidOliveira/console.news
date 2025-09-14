@@ -6,10 +6,12 @@ import rolePermissionRoutes from '@/routes/v1/modules/role-permission/role-permi
 import roleRoutes from '@/routes/v1/modules/role/roles.routes';
 import categoryRoutes from '@/routes/v1/modules/category/category.routes';
 import templateRoutes from '@/routes/v1/modules/template/template.routes';
+import healthRoutes from '@/routes/v1/modules/health/health.routes';
 import { hasRole } from '@/middlewares/authorization/role.middleware';
 
 const router: Router = Router();
 
+router.use('/health', healthRoutes);
 router.use('/auth', authRoutes);
 router.use('/permissions', authMiddleware, permissionRoutes);
 router.use('/roles', authMiddleware, roleRoutes);

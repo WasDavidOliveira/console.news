@@ -292,6 +292,119 @@ export const generateOpenAPIDocument = () => {
       description: 'Resposta de preview do template',
     });
 
+  // Schemas de resposta para Health Check
+  const healthSimpleResponseSchema = z
+    .object({
+      message: z.string().openapi({
+        description: 'Status da API',
+        example: 'OK',
+      }),
+      timestamp: z.string().openapi({
+        description: 'Timestamp da verificação',
+        example: '2024-01-15T10:30:00.000Z',
+      }),
+    })
+    .openapi({
+      ref: 'HealthSimpleResponse',
+      description: 'Resposta simples de health check',
+    });
+
+  const healthDetailedResponseSchema = z
+    .object({
+      message: z.string().openapi({
+        description: 'Mensagem de status da API',
+        example: 'API está funcionando corretamente',
+      }),
+      data: z.object({
+        status: z.string().openapi({
+          description: 'Status da aplicação',
+          example: 'healthy',
+        }),
+        timestamp: z.string().openapi({
+          description: 'Timestamp da verificação',
+          example: '2024-01-15T10:30:00.000Z',
+        }),
+        uptime: z.number().openapi({
+          description: 'Tempo de execução em segundos',
+          example: 3600.5,
+        }),
+        environment: z.string().openapi({
+          description: 'Ambiente de execução',
+          example: 'development',
+        }),
+        version: z.string().openapi({
+          description: 'Versão da aplicação',
+          example: '1.0.0',
+        }),
+        database: z.string().openapi({
+          description: 'Status da conexão com o banco',
+          example: 'connected',
+        }),
+        memory: z.object({
+          used: z.number().openapi({
+            description: 'Memória usada em MB',
+            example: 45.67,
+          }),
+          total: z.number().openapi({
+            description: 'Memória total em MB',
+            example: 128.0,
+          }),
+        }).openapi({
+          description: 'Informações de memória',
+        }),
+      }).openapi({
+        description: 'Dados detalhados do health check',
+      }),
+    })
+    .openapi({
+      ref: 'HealthDetailedResponse',
+      description: 'Resposta detalhada de health check',
+    });
+
+  const healthErrorResponseSchema = z
+    .object({
+      message: z.string().openapi({
+        description: 'Mensagem de erro',
+        example: 'API está com problemas',
+      }),
+      data: z.object({
+        status: z.string().openapi({
+          description: 'Status da aplicação',
+          example: 'unhealthy',
+        }),
+        timestamp: z.string().openapi({
+          description: 'Timestamp da verificação',
+          example: '2024-01-15T10:30:00.000Z',
+        }),
+        uptime: z.number().openapi({
+          description: 'Tempo de execução em segundos',
+          example: 3600.5,
+        }),
+        environment: z.string().openapi({
+          description: 'Ambiente de execução',
+          example: 'development',
+        }),
+        version: z.string().openapi({
+          description: 'Versão da aplicação',
+          example: '1.0.0',
+        }),
+        database: z.string().openapi({
+          description: 'Status da conexão com o banco',
+          example: 'disconnected',
+        }),
+        error: z.string().openapi({
+          description: 'Mensagem de erro',
+          example: 'Connection timeout',
+        }),
+      }).openapi({
+        description: 'Dados de erro do health check',
+      }),
+    })
+    .openapi({
+      ref: 'HealthErrorResponse',
+      description: 'Resposta de erro do health check',
+    });
+
   const document = createDocument({
     openapi: '3.0.0',
     info: {
@@ -306,6 +419,49 @@ export const generateOpenAPIDocument = () => {
       },
     ],
     paths: {
+      // Rotas de Health Check
+      '/api/v1/health': {
+        get: {
+          tags: ['Health Check'],
+          summary: 'Health check simples',
+          description: 'Endpoint para verificar se a API está funcionando',
+          responses: {
+            200: {
+              description: 'API funcionando corretamente',
+              content: {
+                'application/json': {
+                  schema: healthSimpleResponseSchema,
+                },
+              },
+            },
+          },
+        },
+      },
+      '/api/v1/health/detailed': {
+        get: {
+          tags: ['Health Check'],
+          summary: 'Health check detalhado',
+          description: 'Endpoint para verificar o status detalhado da API incluindo banco de dados e métricas',
+          responses: {
+            200: {
+              description: 'API funcionando corretamente com todos os serviços',
+              content: {
+                'application/json': {
+                  schema: healthDetailedResponseSchema,
+                },
+              },
+            },
+            503: {
+              description: 'API com problemas - algum serviço indisponível',
+              content: {
+                'application/json': {
+                  schema: healthErrorResponseSchema,
+                },
+              },
+            },
+          },
+        },
+      },
       '/api/v1/auth/login': {
         post: {
           tags: ['Autenticação'],
