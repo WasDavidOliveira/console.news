@@ -1221,6 +1221,11 @@ export const generateOpenAPIDocument = () => {
           tags: ['Inscrições'],
           summary: 'Listar inscrições',
           description: 'Endpoint para listar inscrições com filtros opcionais',
+          security: [
+            {
+              bearerAuth: [],
+            },
+          ],
           parameters: [
             {
               name: 'status',
@@ -1252,6 +1257,12 @@ export const generateOpenAPIDocument = () => {
                   schema: subscriptionListResponseSchema,
                 },
               },
+            },
+            401: {
+              description: 'Não autorizado - Token ausente ou inválido',
+            },
+            403: {
+              description: 'Acesso negado - Apenas administradores',
             },
           },
         },
@@ -1290,6 +1301,11 @@ export const generateOpenAPIDocument = () => {
           tags: ['Inscrições'],
           summary: 'Buscar inscrições por email',
           description: 'Endpoint para buscar inscrições de um usuário específico pelo email',
+          security: [
+            {
+              bearerAuth: [],
+            },
+          ],
           parameters: [
             {
               name: 'email',
@@ -1312,6 +1328,12 @@ export const generateOpenAPIDocument = () => {
                 },
               },
             },
+            401: {
+              description: 'Não autorizado - Token ausente ou inválido',
+            },
+            403: {
+              description: 'Acesso negado - Apenas administradores',
+            },
           },
         },
       },
@@ -1320,6 +1342,11 @@ export const generateOpenAPIDocument = () => {
           tags: ['Inscrições'],
           summary: 'Buscar inscrição por ID',
           description: 'Endpoint para buscar uma inscrição específica pelo ID',
+          security: [
+            {
+              bearerAuth: [],
+            },
+          ],
           parameters: [
             {
               name: 'id',
@@ -1344,6 +1371,12 @@ export const generateOpenAPIDocument = () => {
             400: {
               description: 'ID inválido',
             },
+            401: {
+              description: 'Não autorizado - Token ausente ou inválido',
+            },
+            403: {
+              description: 'Acesso negado - Apenas administradores',
+            },
             404: {
               description: 'Inscrição não encontrada',
             },
@@ -1353,6 +1386,11 @@ export const generateOpenAPIDocument = () => {
           tags: ['Inscrições'],
           summary: 'Atualizar inscrição',
           description: 'Endpoint para atualizar uma inscrição existente',
+          security: [
+            {
+              bearerAuth: [],
+            },
+          ],
           parameters: [
             {
               name: 'id',
@@ -1385,6 +1423,12 @@ export const generateOpenAPIDocument = () => {
             400: {
               description: 'Dados inválidos',
             },
+            401: {
+              description: 'Não autorizado - Token ausente ou inválido',
+            },
+            403: {
+              description: 'Acesso negado - Apenas administradores',
+            },
             404: {
               description: 'Inscrição não encontrada',
             },
@@ -1394,6 +1438,11 @@ export const generateOpenAPIDocument = () => {
           tags: ['Inscrições'],
           summary: 'Excluir inscrição',
           description: 'Endpoint para excluir uma inscrição',
+          security: [
+            {
+              bearerAuth: [],
+            },
+          ],
           parameters: [
             {
               name: 'id',
@@ -1418,6 +1467,12 @@ export const generateOpenAPIDocument = () => {
             400: {
               description: 'ID inválido',
             },
+            401: {
+              description: 'Não autorizado - Token ausente ou inválido',
+            },
+            403: {
+              description: 'Acesso negado - Apenas administradores',
+            },
             404: {
               description: 'Inscrição não encontrada',
             },
@@ -1429,6 +1484,11 @@ export const generateOpenAPIDocument = () => {
           tags: ['Inscrições'],
           summary: 'Ativar inscrição',
           description: 'Endpoint para ativar uma inscrição',
+          security: [
+            {
+              bearerAuth: [],
+            },
+          ],
           parameters: [
             {
               name: 'id',
@@ -1453,6 +1513,12 @@ export const generateOpenAPIDocument = () => {
             400: {
               description: 'ID inválido',
             },
+            401: {
+              description: 'Não autorizado - Token ausente ou inválido',
+            },
+            403: {
+              description: 'Acesso negado - Apenas administradores',
+            },
             404: {
               description: 'Inscrição não encontrada',
             },
@@ -1464,6 +1530,11 @@ export const generateOpenAPIDocument = () => {
           tags: ['Inscrições'],
           summary: 'Desativar inscrição',
           description: 'Endpoint para desativar uma inscrição',
+          security: [
+            {
+              bearerAuth: [],
+            },
+          ],
           parameters: [
             {
               name: 'id',
@@ -1487,6 +1558,12 @@ export const generateOpenAPIDocument = () => {
             },
             400: {
               description: 'ID inválido',
+            },
+            401: {
+              description: 'Não autorizado - Token ausente ou inválido',
+            },
+            403: {
+              description: 'Acesso negado - Apenas administradores',
             },
             404: {
               description: 'Inscrição não encontrada',

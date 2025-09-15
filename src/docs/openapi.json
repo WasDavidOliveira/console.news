@@ -927,6 +927,11 @@
         ],
         "summary": "Listar inscrições",
         "description": "Endpoint para listar inscrições com filtros opcionais",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
         "parameters": [
           {
             "name": "status",
@@ -964,6 +969,12 @@
                 }
               }
             }
+          },
+          "401": {
+            "description": "Não autorizado - Token ausente ou inválido"
+          },
+          "403": {
+            "description": "Acesso negado - Apenas administradores"
           }
         }
       },
@@ -1028,6 +1039,11 @@
         ],
         "summary": "Buscar inscrições por email",
         "description": "Endpoint para buscar inscrições de um usuário específico pelo email",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
         "parameters": [
           {
             "name": "email",
@@ -1051,6 +1067,12 @@
                 }
               }
             }
+          },
+          "401": {
+            "description": "Não autorizado - Token ausente ou inválido"
+          },
+          "403": {
+            "description": "Acesso negado - Apenas administradores"
           }
         }
       }
@@ -1062,6 +1084,11 @@
         ],
         "summary": "Buscar inscrição por ID",
         "description": "Endpoint para buscar uma inscrição específica pelo ID",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
         "parameters": [
           {
             "name": "id",
@@ -1088,6 +1115,12 @@
           "400": {
             "description": "ID inválido"
           },
+          "401": {
+            "description": "Não autorizado - Token ausente ou inválido"
+          },
+          "403": {
+            "description": "Acesso negado - Apenas administradores"
+          },
           "404": {
             "description": "Inscrição não encontrada"
           }
@@ -1099,6 +1132,11 @@
         ],
         "summary": "Atualizar inscrição",
         "description": "Endpoint para atualizar uma inscrição existente",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
         "parameters": [
           {
             "name": "id",
@@ -1150,6 +1188,12 @@
           "400": {
             "description": "Dados inválidos"
           },
+          "401": {
+            "description": "Não autorizado - Token ausente ou inválido"
+          },
+          "403": {
+            "description": "Acesso negado - Apenas administradores"
+          },
           "404": {
             "description": "Inscrição não encontrada"
           }
@@ -1161,6 +1205,11 @@
         ],
         "summary": "Excluir inscrição",
         "description": "Endpoint para excluir uma inscrição",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
         "parameters": [
           {
             "name": "id",
@@ -1187,6 +1236,12 @@
           "400": {
             "description": "ID inválido"
           },
+          "401": {
+            "description": "Não autorizado - Token ausente ou inválido"
+          },
+          "403": {
+            "description": "Acesso negado - Apenas administradores"
+          },
           "404": {
             "description": "Inscrição não encontrada"
           }
@@ -1200,6 +1255,11 @@
         ],
         "summary": "Ativar inscrição",
         "description": "Endpoint para ativar uma inscrição",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
         "parameters": [
           {
             "name": "id",
@@ -1226,6 +1286,12 @@
           "400": {
             "description": "ID inválido"
           },
+          "401": {
+            "description": "Não autorizado - Token ausente ou inválido"
+          },
+          "403": {
+            "description": "Acesso negado - Apenas administradores"
+          },
           "404": {
             "description": "Inscrição não encontrada"
           }
@@ -1239,6 +1305,11 @@
         ],
         "summary": "Desativar inscrição",
         "description": "Endpoint para desativar uma inscrição",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
         "parameters": [
           {
             "name": "id",
@@ -1264,6 +1335,12 @@
           },
           "400": {
             "description": "ID inválido"
+          },
+          "401": {
+            "description": "Não autorizado - Token ausente ou inválido"
+          },
+          "403": {
+            "description": "Acesso negado - Apenas administradores"
           },
           "404": {
             "description": "Inscrição não encontrada"
