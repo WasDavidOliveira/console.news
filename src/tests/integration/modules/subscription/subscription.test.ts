@@ -40,7 +40,10 @@ describe('Subscription', () => {
       expect(response.body.message).toBe('Inscrição criada com sucesso');
       expect(response.body.data).toHaveProperty('id');
       expect(response.body.data).toHaveProperty('userId');
-      expect(response.body.data).toHaveProperty('status', SubscriptionStatus.ACTIVE);
+      expect(response.body.data).toHaveProperty(
+        'status',
+        SubscriptionStatus.ACTIVE,
+      );
       expect(response.body.data).toHaveProperty('isActive', true);
     });
 
@@ -73,7 +76,9 @@ describe('Subscription', () => {
         .send(subscriptionData);
 
       expect(response.status).toBe(StatusCode.CONFLICT);
-      expect(response.body.message).toBe('Usuário já possui uma inscrição ativa');
+      expect(response.body.message).toBe(
+        'Usuário já possui uma inscrição ativa',
+      );
     });
 
     it('deve retornar erro 400 se dados inválidos', async () => {
@@ -82,9 +87,7 @@ describe('Subscription', () => {
         email: faker.string.alphanumeric(10),
       };
 
-      const response = await request(server)
-        .post(apiUrl)
-        .send(invalidData);
+      const response = await request(server).post(apiUrl).send(invalidData);
 
       expect(response.status).toBe(StatusCode.BAD_REQUEST);
       expect(response.body.status).toBe('erro');
@@ -94,7 +97,9 @@ describe('Subscription', () => {
 
   describe('GET /subscriptions', () => {
     it('deve listar todas as inscrições', async () => {
-      const { token } = await UserFactory.createUserWithRoleAndGetToken(Roles.ADMIN);
+      const { token } = await UserFactory.createUserWithRoleAndGetToken(
+        Roles.ADMIN,
+      );
       await SubscriptionFactory.createActiveSubscription();
       await SubscriptionFactory.createInactiveSubscription();
 
@@ -108,7 +113,9 @@ describe('Subscription', () => {
     });
 
     it('deve filtrar inscrições por status ativo', async () => {
-      const { token } = await UserFactory.createUserWithRoleAndGetToken(Roles.ADMIN);
+      const { token } = await UserFactory.createUserWithRoleAndGetToken(
+        Roles.ADMIN,
+      );
       await SubscriptionFactory.createActiveSubscription();
       await SubscriptionFactory.createInactiveSubscription();
 
@@ -117,11 +124,15 @@ describe('Subscription', () => {
         .set('Authorization', `Bearer ${token}`);
 
       expect(response.status).toBe(StatusCode.OK);
-      expect(response.body.data.every((sub: any) => sub.isActive === true)).toBe(true);
+      expect(
+        response.body.data.every((sub: any) => sub.isActive === true),
+      ).toBe(true);
     });
 
     it('deve filtrar inscrições por status inativo', async () => {
-      const { token } = await UserFactory.createUserWithRoleAndGetToken(Roles.ADMIN);
+      const { token } = await UserFactory.createUserWithRoleAndGetToken(
+        Roles.ADMIN,
+      );
       await SubscriptionFactory.createActiveSubscription();
       await SubscriptionFactory.createInactiveSubscription();
 
@@ -130,11 +141,15 @@ describe('Subscription', () => {
         .set('Authorization', `Bearer ${token}`);
 
       expect(response.status).toBe(StatusCode.OK);
-      expect(response.body.data.every((sub: any) => sub.isActive === false)).toBe(true);
+      expect(
+        response.body.data.every((sub: any) => sub.isActive === false),
+      ).toBe(true);
     });
 
     it('deve filtrar inscrições por status específico', async () => {
-      const { token } = await UserFactory.createUserWithRoleAndGetToken(Roles.ADMIN);
+      const { token } = await UserFactory.createUserWithRoleAndGetToken(
+        Roles.ADMIN,
+      );
       await SubscriptionFactory.createWithStatus(SubscriptionStatus.ACTIVE);
       await SubscriptionFactory.createWithStatus(SubscriptionStatus.INACTIVE);
 
@@ -143,18 +158,23 @@ describe('Subscription', () => {
         .set('Authorization', `Bearer ${token}`);
 
       expect(response.status).toBe(StatusCode.OK);
-      expect(response.body.data.every((sub: any) => sub.status === SubscriptionStatus.ACTIVE)).toBe(true);
+      expect(
+        response.body.data.every(
+          (sub: any) => sub.status === SubscriptionStatus.ACTIVE,
+        ),
+      ).toBe(true);
     });
 
     it('deve retornar erro 401 quando não autenticado', async () => {
-      const response = await request(server)
-        .get(apiUrl);
+      const response = await request(server).get(apiUrl);
 
       expect(response.status).toBe(StatusCode.UNAUTHORIZED);
     });
 
     it('deve retornar erro 403 quando não tem permissão de admin', async () => {
-      const { token } = await UserFactory.createUserWithRoleAndGetToken(Roles.USER);
+      const { token } = await UserFactory.createUserWithRoleAndGetToken(
+        Roles.USER,
+      );
 
       const response = await request(server)
         .get(apiUrl)
@@ -166,8 +186,11 @@ describe('Subscription', () => {
 
   describe('GET /subscriptions/email/:email', () => {
     it('deve buscar inscrições por email', async () => {
-      const { token } = await UserFactory.createUserWithRoleAndGetToken(Roles.ADMIN);
-      const { user, subscription } = await SubscriptionFactory.createActiveSubscription();
+      const { token } = await UserFactory.createUserWithRoleAndGetToken(
+        Roles.ADMIN,
+      );
+      const { user, subscription } =
+        await SubscriptionFactory.createActiveSubscription();
 
       const response = await request(server)
         .get(`${apiUrl}/email/${user.email}`)
@@ -180,7 +203,9 @@ describe('Subscription', () => {
     });
 
     it('deve retornar array vazio se email não possui inscrições', async () => {
-      const { token } = await UserFactory.createUserWithRoleAndGetToken(Roles.ADMIN);
+      const { token } = await UserFactory.createUserWithRoleAndGetToken(
+        Roles.ADMIN,
+      );
       const nonExistentEmail = faker.internet.email().toLowerCase();
 
       const response = await request(server)
@@ -193,14 +218,17 @@ describe('Subscription', () => {
 
     it('deve retornar erro 401 quando não autenticado', async () => {
       const testEmail = faker.internet.email().toLowerCase();
-      const response = await request(server)
-        .get(`${apiUrl}/email/${testEmail}`);
+      const response = await request(server).get(
+        `${apiUrl}/email/${testEmail}`,
+      );
 
       expect(response.status).toBe(StatusCode.UNAUTHORIZED);
     });
 
     it('deve retornar erro 403 quando não tem permissão de admin', async () => {
-      const { token } = await UserFactory.createUserWithRoleAndGetToken(Roles.USER);
+      const { token } = await UserFactory.createUserWithRoleAndGetToken(
+        Roles.USER,
+      );
       const testEmail = faker.internet.email().toLowerCase();
 
       const response = await request(server)
@@ -213,8 +241,11 @@ describe('Subscription', () => {
 
   describe('GET /subscriptions/:id', () => {
     it('deve buscar inscrição por ID', async () => {
-      const { token } = await UserFactory.createUserWithRoleAndGetToken(Roles.ADMIN);
-      const { subscription } = await SubscriptionFactory.createActiveSubscription();
+      const { token } = await UserFactory.createUserWithRoleAndGetToken(
+        Roles.ADMIN,
+      );
+      const { subscription } =
+        await SubscriptionFactory.createActiveSubscription();
 
       const response = await request(server)
         .get(`${apiUrl}/${subscription.id}`)
@@ -226,7 +257,9 @@ describe('Subscription', () => {
     });
 
     it('deve retornar erro 400 se ID inválido', async () => {
-      const { token } = await UserFactory.createUserWithRoleAndGetToken(Roles.ADMIN);
+      const { token } = await UserFactory.createUserWithRoleAndGetToken(
+        Roles.ADMIN,
+      );
 
       const response = await request(server)
         .get(`${apiUrl}/abc`)
@@ -237,7 +270,9 @@ describe('Subscription', () => {
     });
 
     it('deve retornar erro 404 se inscrição não encontrada', async () => {
-      const { token } = await UserFactory.createUserWithRoleAndGetToken(Roles.ADMIN);
+      const { token } = await UserFactory.createUserWithRoleAndGetToken(
+        Roles.ADMIN,
+      );
 
       const response = await request(server)
         .get(`${apiUrl}/99999`)
@@ -248,14 +283,15 @@ describe('Subscription', () => {
     });
 
     it('deve retornar erro 401 quando não autenticado', async () => {
-      const response = await request(server)
-        .get(`${apiUrl}/1`);
+      const response = await request(server).get(`${apiUrl}/1`);
 
       expect(response.status).toBe(StatusCode.UNAUTHORIZED);
     });
 
     it('deve retornar erro 403 quando não tem permissão de admin', async () => {
-      const { token } = await UserFactory.createUserWithRoleAndGetToken(Roles.USER);
+      const { token } = await UserFactory.createUserWithRoleAndGetToken(
+        Roles.USER,
+      );
 
       const response = await request(server)
         .get(`${apiUrl}/1`)
@@ -267,8 +303,11 @@ describe('Subscription', () => {
 
   describe('PUT /subscriptions/:id', () => {
     it('deve atualizar inscrição com sucesso', async () => {
-      const { token } = await UserFactory.createUserWithRoleAndGetToken(Roles.ADMIN);
-      const { subscription } = await SubscriptionFactory.createActiveSubscription();
+      const { token } = await UserFactory.createUserWithRoleAndGetToken(
+        Roles.ADMIN,
+      );
+      const { subscription } =
+        await SubscriptionFactory.createActiveSubscription();
 
       const updateData = {
         status: SubscriptionStatus.INACTIVE,
@@ -287,7 +326,9 @@ describe('Subscription', () => {
     });
 
     it('deve retornar erro 404 se inscrição não encontrada', async () => {
-      const { token } = await UserFactory.createUserWithRoleAndGetToken(Roles.ADMIN);
+      const { token } = await UserFactory.createUserWithRoleAndGetToken(
+        Roles.ADMIN,
+      );
       const updateData = {
         status: SubscriptionStatus.INACTIVE,
       };
@@ -314,7 +355,9 @@ describe('Subscription', () => {
     });
 
     it('deve retornar erro 403 quando não tem permissão de admin', async () => {
-      const { token } = await UserFactory.createUserWithRoleAndGetToken(Roles.USER);
+      const { token } = await UserFactory.createUserWithRoleAndGetToken(
+        Roles.USER,
+      );
       const updateData = {
         status: SubscriptionStatus.INACTIVE,
       };
@@ -330,8 +373,11 @@ describe('Subscription', () => {
 
   describe('PATCH /subscriptions/:id/activate', () => {
     it('deve ativar inscrição com sucesso', async () => {
-      const { token } = await UserFactory.createUserWithRoleAndGetToken(Roles.ADMIN);
-      const { subscription } = await SubscriptionFactory.createInactiveSubscription();
+      const { token } = await UserFactory.createUserWithRoleAndGetToken(
+        Roles.ADMIN,
+      );
+      const { subscription } =
+        await SubscriptionFactory.createInactiveSubscription();
 
       const response = await request(server)
         .patch(`${apiUrl}/${subscription.id}/activate`)
@@ -343,7 +389,9 @@ describe('Subscription', () => {
     });
 
     it('deve retornar erro 404 se inscrição não encontrada', async () => {
-      const { token } = await UserFactory.createUserWithRoleAndGetToken(Roles.ADMIN);
+      const { token } = await UserFactory.createUserWithRoleAndGetToken(
+        Roles.ADMIN,
+      );
 
       const response = await request(server)
         .patch(`${apiUrl}/99999/activate`)
@@ -354,14 +402,15 @@ describe('Subscription', () => {
     });
 
     it('deve retornar erro 401 quando não autenticado', async () => {
-      const response = await request(server)
-        .patch(`${apiUrl}/1/activate`);
+      const response = await request(server).patch(`${apiUrl}/1/activate`);
 
       expect(response.status).toBe(StatusCode.UNAUTHORIZED);
     });
 
     it('deve retornar erro 403 quando não tem permissão de admin', async () => {
-      const { token } = await UserFactory.createUserWithRoleAndGetToken(Roles.USER);
+      const { token } = await UserFactory.createUserWithRoleAndGetToken(
+        Roles.USER,
+      );
 
       const response = await request(server)
         .patch(`${apiUrl}/1/activate`)
@@ -373,8 +422,11 @@ describe('Subscription', () => {
 
   describe('PATCH /subscriptions/:id/deactivate', () => {
     it('deve desativar inscrição com sucesso', async () => {
-      const { token } = await UserFactory.createUserWithRoleAndGetToken(Roles.ADMIN);
-      const { subscription } = await SubscriptionFactory.createActiveSubscription();
+      const { token } = await UserFactory.createUserWithRoleAndGetToken(
+        Roles.ADMIN,
+      );
+      const { subscription } =
+        await SubscriptionFactory.createActiveSubscription();
 
       const response = await request(server)
         .patch(`${apiUrl}/${subscription.id}/deactivate`)
@@ -386,7 +438,9 @@ describe('Subscription', () => {
     });
 
     it('deve retornar erro 404 se inscrição não encontrada', async () => {
-      const { token } = await UserFactory.createUserWithRoleAndGetToken(Roles.ADMIN);
+      const { token } = await UserFactory.createUserWithRoleAndGetToken(
+        Roles.ADMIN,
+      );
 
       const response = await request(server)
         .patch(`${apiUrl}/99999/deactivate`)
@@ -397,14 +451,15 @@ describe('Subscription', () => {
     });
 
     it('deve retornar erro 401 quando não autenticado', async () => {
-      const response = await request(server)
-        .patch(`${apiUrl}/1/deactivate`);
+      const response = await request(server).patch(`${apiUrl}/1/deactivate`);
 
       expect(response.status).toBe(StatusCode.UNAUTHORIZED);
     });
 
     it('deve retornar erro 403 quando não tem permissão de admin', async () => {
-      const { token } = await UserFactory.createUserWithRoleAndGetToken(Roles.USER);
+      const { token } = await UserFactory.createUserWithRoleAndGetToken(
+        Roles.USER,
+      );
 
       const response = await request(server)
         .patch(`${apiUrl}/1/deactivate`)
@@ -416,8 +471,11 @@ describe('Subscription', () => {
 
   describe('DELETE /subscriptions/:id', () => {
     it('deve excluir inscrição com sucesso', async () => {
-      const { token } = await UserFactory.createUserWithRoleAndGetToken(Roles.ADMIN);
-      const { subscription } = await SubscriptionFactory.createActiveSubscription();
+      const { token } = await UserFactory.createUserWithRoleAndGetToken(
+        Roles.ADMIN,
+      );
+      const { subscription } =
+        await SubscriptionFactory.createActiveSubscription();
 
       const response = await request(server)
         .delete(`${apiUrl}/${subscription.id}`)
@@ -428,7 +486,9 @@ describe('Subscription', () => {
     });
 
     it('deve retornar erro 404 se inscrição não encontrada', async () => {
-      const { token } = await UserFactory.createUserWithRoleAndGetToken(Roles.ADMIN);
+      const { token } = await UserFactory.createUserWithRoleAndGetToken(
+        Roles.ADMIN,
+      );
 
       const response = await request(server)
         .delete(`${apiUrl}/99999`)
@@ -439,14 +499,15 @@ describe('Subscription', () => {
     });
 
     it('deve retornar erro 401 quando não autenticado', async () => {
-      const response = await request(server)
-        .delete(`${apiUrl}/1`);
+      const response = await request(server).delete(`${apiUrl}/1`);
 
       expect(response.status).toBe(StatusCode.UNAUTHORIZED);
     });
 
     it('deve retornar erro 403 quando não tem permissão de admin', async () => {
-      const { token } = await UserFactory.createUserWithRoleAndGetToken(Roles.USER);
+      const { token } = await UserFactory.createUserWithRoleAndGetToken(
+        Roles.USER,
+      );
 
       const response = await request(server)
         .delete(`${apiUrl}/1`)

@@ -1,11 +1,20 @@
-import { pgTable, serial, varchar, timestamp, boolean, integer } from 'drizzle-orm/pg-core';
+import {
+  pgTable,
+  serial,
+  varchar,
+  timestamp,
+  boolean,
+  integer,
+} from 'drizzle-orm/pg-core';
 import { relations } from 'drizzle-orm';
 import { user } from '@/db/schema/v1/user.schema';
 import { SubscriptionStatus } from '@/enums/v1/modules/subscription/subscription-status.enum';
 
 export const subscriptions = pgTable('subscriptions', {
   id: serial('id').primaryKey(),
-  userId: integer('user_id').notNull().references(() => user.id, { onDelete: 'cascade' }),
+  userId: integer('user_id')
+    .notNull()
+    .references(() => user.id, { onDelete: 'cascade' }),
   status: varchar('status', { length: 1 })
     .notNull()
     .default(SubscriptionStatus.ACTIVE),

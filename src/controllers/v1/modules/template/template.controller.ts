@@ -69,7 +69,9 @@ export class TemplateController {
   };
 
   deactivate = async (req: Request, res: Response) => {
-    const template = await this.templateService.deactivate(Number(req.params.id));
+    const template = await this.templateService.deactivate(
+      Number(req.params.id),
+    );
 
     res.status(StatusCode.OK).json({
       message: 'Template desativado com sucesso.',

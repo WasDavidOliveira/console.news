@@ -1,5 +1,9 @@
 import { emailProvider } from '@/providers';
-import { EmailOptions, WelcomeEmailData, NewsletterEmailData } from '@/types/models/v1/email.types';
+import {
+  EmailOptions,
+  WelcomeEmailData,
+  NewsletterEmailData,
+} from '@/types/models/v1/email.types';
 import { EmailResponse } from '@/types/models/v1/email.types';
 
 export class EmailService {

@@ -72,8 +72,8 @@ export class TemplateService {
       throw new NotFoundError('Template não encontrado');
     }
 
-    const activatedTemplate = await TemplateRepository.update(id, { 
-      isActive: true 
+    const activatedTemplate = await TemplateRepository.update(id, {
+      isActive: true,
     });
 
     return activatedTemplate;
@@ -86,8 +86,8 @@ export class TemplateService {
       throw new NotFoundError('Template não encontrado');
     }
 
-    const deactivatedTemplate = await TemplateRepository.update(id, { 
-      isActive: false 
+    const deactivatedTemplate = await TemplateRepository.update(id, {
+      isActive: false,
     });
 
     return deactivatedTemplate;

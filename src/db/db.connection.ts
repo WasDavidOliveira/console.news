@@ -15,8 +15,14 @@ import appConfig from '@/configs/app.config';
 import { drizzle } from 'drizzle-orm/node-postgres';
 import { Pool } from 'pg';
 import { shipping, shippingRelations } from '@/db/schema/v1/shipping.schema';
-import { newsletter, newsletterRelations } from '@/db/schema/v1/newsletter.schema';
-import { subscriptions, subscriptionRelations } from '@/db/schema/v1/subscription.schema';
+import {
+  newsletter,
+  newsletterRelations,
+} from '@/db/schema/v1/newsletter.schema';
+import {
+  subscriptions,
+  subscriptionRelations,
+} from '@/db/schema/v1/subscription.schema';
 
 const pool = new Pool({
   connectionString: appConfig.databaseUrl,
@@ -42,6 +48,6 @@ export const db = drizzle(pool, {
     newsletter,
     newsletterRelations,
     subscriptions,
-    subscriptionRelations
+    subscriptionRelations,
   },
 });

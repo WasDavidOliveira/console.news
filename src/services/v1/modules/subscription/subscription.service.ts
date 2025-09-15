@@ -1,4 +1,8 @@
-import { NotFoundError, ConflictError, UnprocessableEntityError } from '@/utils/core/app-error.utils';
+import {
+  NotFoundError,
+  ConflictError,
+  UnprocessableEntityError,
+} from '@/utils/core/app-error.utils';
 import SubscriptionRepository from '@/repositories/v1/modules/subscription/subscription.repository';
 import UserRepository from '@/repositories/v1/modules/auth/user.repository';
 import {
@@ -38,8 +42,10 @@ export class SubscriptionService {
     let user = await UserRepository.findByEmail(data.email);
 
     if (!user) {
-      const password = String(data.email + data.name).toLowerCase().trim();
-      
+      const password = String(data.email + data.name)
+        .toLowerCase()
+        .trim();
+
       const passwordHash = await bcrypt.hash(password, 10);
 
       user = await UserRepository.create({
@@ -49,7 +55,8 @@ export class SubscriptionService {
       });
     }
 
-    const existingActiveSubscription = await SubscriptionRepository.findActiveByUserId(user.id);
+    const existingActiveSubscription =
+      await SubscriptionRepository.findActiveByUserId(user.id);
 
     if (existingActiveSubscription) {
       throw new ConflictError('Usuário já possui uma inscrição ativa');

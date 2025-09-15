@@ -26,7 +26,9 @@ export class SubscriptionRepository {
     return subscriptionsResults;
   }
 
-  async findByQuery(query: SubscriptionQuerySchema): Promise<SubscriptionModel[]> {
+  async findByQuery(
+    query: SubscriptionQuerySchema,
+  ): Promise<SubscriptionModel[]> {
     const conditions = [];
 
     if (query.status) {
@@ -58,10 +60,9 @@ export class SubscriptionRepository {
     const [subscription] = await db
       .select()
       .from(subscriptions)
-      .where(and(
-        eq(subscriptions.userId, userId),
-        eq(subscriptions.isActive, true)
-      ))
+      .where(
+        and(eq(subscriptions.userId, userId), eq(subscriptions.isActive, true)),
+      )
       .limit(1);
 
     return subscription ?? null;
@@ -82,7 +83,9 @@ export class SubscriptionRepository {
       .where(eq(user.email, email));
   }
 
-  async create(subscription: CreateSubscriptionModel): Promise<SubscriptionModel> {
+  async create(
+    subscription: CreateSubscriptionModel,
+  ): Promise<SubscriptionModel> {
     const [newSubscription] = await db
       .insert(subscriptions)
       .values(subscription)

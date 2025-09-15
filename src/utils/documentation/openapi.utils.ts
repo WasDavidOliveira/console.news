@@ -171,7 +171,8 @@ export const generateOpenAPIDocument = () => {
       }),
       html: z.string().openapi({
         description: 'Conteúdo HTML do template',
-        example: '<html><body><h1>{{title}}</h1><div>{{content}}</div></body></html>',
+        example:
+          '<html><body><h1>{{title}}</h1><div>{{content}}</div></body></html>',
       }),
       text: z.string().nullable().openapi({
         description: 'Conteúdo de texto do template',
@@ -290,7 +291,8 @@ export const generateOpenAPIDocument = () => {
       }),
       preview: z.string().openapi({
         description: 'HTML renderizado do template',
-        example: '<html><body><h1>Exemplo de Título</h1><div>Exemplo de conteúdo</div></body></html>',
+        example:
+          '<html><body><h1>Exemplo de Título</h1><div>Exemplo de conteúdo</div></body></html>',
       }),
     })
     .openapi({
@@ -433,46 +435,50 @@ export const generateOpenAPIDocument = () => {
         description: 'Mensagem de status da API',
         example: 'API está funcionando corretamente',
       }),
-      data: z.object({
-        status: z.string().openapi({
-          description: 'Status da aplicação',
-          example: 'healthy',
-        }),
-        timestamp: z.string().openapi({
-          description: 'Timestamp da verificação',
-          example: '2024-01-15T10:30:00.000Z',
-        }),
-        uptime: z.number().openapi({
-          description: 'Tempo de execução em segundos',
-          example: 3600.5,
-        }),
-        environment: z.string().openapi({
-          description: 'Ambiente de execução',
-          example: 'development',
-        }),
-        version: z.string().openapi({
-          description: 'Versão da aplicação',
-          example: '1.0.0',
-        }),
-        database: z.string().openapi({
-          description: 'Status da conexão com o banco',
-          example: 'connected',
-        }),
-        memory: z.object({
-          used: z.number().openapi({
-            description: 'Memória usada em MB',
-            example: 45.67,
+      data: z
+        .object({
+          status: z.string().openapi({
+            description: 'Status da aplicação',
+            example: 'healthy',
           }),
-          total: z.number().openapi({
-            description: 'Memória total em MB',
-            example: 128.0,
+          timestamp: z.string().openapi({
+            description: 'Timestamp da verificação',
+            example: '2024-01-15T10:30:00.000Z',
           }),
-        }).openapi({
-          description: 'Informações de memória',
+          uptime: z.number().openapi({
+            description: 'Tempo de execução em segundos',
+            example: 3600.5,
+          }),
+          environment: z.string().openapi({
+            description: 'Ambiente de execução',
+            example: 'development',
+          }),
+          version: z.string().openapi({
+            description: 'Versão da aplicação',
+            example: '1.0.0',
+          }),
+          database: z.string().openapi({
+            description: 'Status da conexão com o banco',
+            example: 'connected',
+          }),
+          memory: z
+            .object({
+              used: z.number().openapi({
+                description: 'Memória usada em MB',
+                example: 45.67,
+              }),
+              total: z.number().openapi({
+                description: 'Memória total em MB',
+                example: 128.0,
+              }),
+            })
+            .openapi({
+              description: 'Informações de memória',
+            }),
+        })
+        .openapi({
+          description: 'Dados detalhados do health check',
         }),
-      }).openapi({
-        description: 'Dados detalhados do health check',
-      }),
     })
     .openapi({
       ref: 'HealthDetailedResponse',
@@ -485,38 +491,40 @@ export const generateOpenAPIDocument = () => {
         description: 'Mensagem de erro',
         example: 'API está com problemas',
       }),
-      data: z.object({
-        status: z.string().openapi({
-          description: 'Status da aplicação',
-          example: 'unhealthy',
+      data: z
+        .object({
+          status: z.string().openapi({
+            description: 'Status da aplicação',
+            example: 'unhealthy',
+          }),
+          timestamp: z.string().openapi({
+            description: 'Timestamp da verificação',
+            example: '2024-01-15T10:30:00.000Z',
+          }),
+          uptime: z.number().openapi({
+            description: 'Tempo de execução em segundos',
+            example: 3600.5,
+          }),
+          environment: z.string().openapi({
+            description: 'Ambiente de execução',
+            example: 'development',
+          }),
+          version: z.string().openapi({
+            description: 'Versão da aplicação',
+            example: '1.0.0',
+          }),
+          database: z.string().openapi({
+            description: 'Status da conexão com o banco',
+            example: 'disconnected',
+          }),
+          error: z.string().openapi({
+            description: 'Mensagem de erro',
+            example: 'Connection timeout',
+          }),
+        })
+        .openapi({
+          description: 'Dados de erro do health check',
         }),
-        timestamp: z.string().openapi({
-          description: 'Timestamp da verificação',
-          example: '2024-01-15T10:30:00.000Z',
-        }),
-        uptime: z.number().openapi({
-          description: 'Tempo de execução em segundos',
-          example: 3600.5,
-        }),
-        environment: z.string().openapi({
-          description: 'Ambiente de execução',
-          example: 'development',
-        }),
-        version: z.string().openapi({
-          description: 'Versão da aplicação',
-          example: '1.0.0',
-        }),
-        database: z.string().openapi({
-          description: 'Status da conexão com o banco',
-          example: 'disconnected',
-        }),
-        error: z.string().openapi({
-          description: 'Mensagem de erro',
-          example: 'Connection timeout',
-        }),
-      }).openapi({
-        description: 'Dados de erro do health check',
-      }),
     })
     .openapi({
       ref: 'HealthErrorResponse',
@@ -559,7 +567,8 @@ export const generateOpenAPIDocument = () => {
         get: {
           tags: ['Health Check'],
           summary: 'Health check detalhado',
-          description: 'Endpoint para verificar o status detalhado da API incluindo banco de dados e métricas',
+          description:
+            'Endpoint para verificar o status detalhado da API incluindo banco de dados e métricas',
           responses: {
             200: {
               description: 'API funcionando corretamente com todos os serviços',
@@ -1269,7 +1278,8 @@ export const generateOpenAPIDocument = () => {
         post: {
           tags: ['Inscrições'],
           summary: 'Criar inscrição',
-          description: 'Endpoint para criar uma nova inscrição. Se o usuário não existir, será criado automaticamente. Apenas uma inscrição ativa por usuário é permitida.',
+          description:
+            'Endpoint para criar uma nova inscrição. Se o usuário não existir, será criado automaticamente. Apenas uma inscrição ativa por usuário é permitida.',
           requestBody: {
             required: true,
             content: {
@@ -1300,7 +1310,8 @@ export const generateOpenAPIDocument = () => {
         get: {
           tags: ['Inscrições'],
           summary: 'Buscar inscrições por email',
-          description: 'Endpoint para buscar inscrições de um usuário específico pelo email',
+          description:
+            'Endpoint para buscar inscrições de um usuário específico pelo email',
           security: [
             {
               bearerAuth: [],

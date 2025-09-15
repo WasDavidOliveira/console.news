@@ -7,7 +7,7 @@ import { IEmailProvider } from '@/types/providers/email-provider.interface';
 export class ResendEmailProvider implements IEmailProvider {
   protected resend: Resend;
 
-  constructor() {    
+  constructor() {
     this.resend = new Resend(emailConfig.resendApiKey);
   }
 
@@ -21,7 +21,7 @@ export class ResendEmailProvider implements IEmailProvider {
     if (options.html) {
       emailData.html = options.html;
     }
-    
+
     if (options.text) {
       emailData.text = options.text;
     }
@@ -33,7 +33,9 @@ export class ResendEmailProvider implements IEmailProvider {
     const { data, error } = await this.resend.emails.send(emailData);
 
     if (error) {
-      throw new EmailServiceError(`Erro ao enviar email via Resend: ${error.message}`);
+      throw new EmailServiceError(
+        `Erro ao enviar email via Resend: ${error.message}`,
+      );
     }
 
     if (!data) {

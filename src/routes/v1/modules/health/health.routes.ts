@@ -7,6 +7,11 @@ const router: Router = Router();
 
 router.get('/', HealthController.simple);
 
-router.get('/detailed', authMiddleware, hasRole('admin'), HealthController.check);
+router.get(
+  '/detailed',
+  authMiddleware,
+  hasRole('admin'),
+  HealthController.check,
+);
 
 export default router;

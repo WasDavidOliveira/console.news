@@ -18,12 +18,10 @@ export const createTemplateSchema = z.object({
       .optional()
       .openapi({ example: 'Template para newsletter semanal de notícias' }),
 
-    html: z
-      .string()
-      .min(1, 'HTML é obrigatório')
-      .openapi({ 
-        example: '<html><body><h1>{{title}}</h1><div>{{content}}</div></body></html>' 
-      }),
+    html: z.string().min(1, 'HTML é obrigatório').openapi({
+      example:
+        '<html><body><h1>{{title}}</h1><div>{{content}}</div></body></html>',
+    }),
 
     text: z
       .string()
@@ -38,14 +36,11 @@ export const createTemplateSchema = z.object({
     variables: z
       .array(z.nativeEnum(TemplateVariable))
       .default([])
-      .openapi({ 
-        example: [TemplateVariable.TITLE, TemplateVariable.CONTENT] 
+      .openapi({
+        example: [TemplateVariable.TITLE, TemplateVariable.CONTENT],
       }),
 
-    isActive: z
-      .boolean()
-      .default(true)
-      .openapi({ example: true }),
+    isActive: z.boolean().default(true).openapi({ example: true }),
   }),
 });
 
@@ -72,13 +67,10 @@ export const updateTemplateSchema = z.object({
       .optional()
       .openapi({ example: 'Template atualizado para newsletter' }),
 
-    html: z
-      .string()
-      .min(1, 'HTML é obrigatório')
-      .optional()
-      .openapi({ 
-        example: '<html><body><h1>{{title}}</h1><div>{{content}}</div></body></html>' 
-      }),
+    html: z.string().min(1, 'HTML é obrigatório').optional().openapi({
+      example:
+        '<html><body><h1>{{title}}</h1><div>{{content}}</div></body></html>',
+    }),
 
     text: z
       .string()
@@ -93,14 +85,11 @@ export const updateTemplateSchema = z.object({
     variables: z
       .array(z.nativeEnum(TemplateVariable))
       .optional()
-      .openapi({ 
-        example: [TemplateVariable.TITLE, TemplateVariable.CONTENT] 
+      .openapi({
+        example: [TemplateVariable.TITLE, TemplateVariable.CONTENT],
       }),
 
-    isActive: z
-      .boolean()
-      .optional()
-      .openapi({ example: false }),
+    isActive: z.boolean().optional().openapi({ example: false }),
   }),
 });
 
@@ -120,7 +109,9 @@ export const templateQuerySchema = z.object({
     active: z
       .string()
       .optional()
-      .transform(val => val === 'true' ? true : val === 'false' ? false : undefined)
+      .transform(val =>
+        val === 'true' ? true : val === 'false' ? false : undefined,
+      )
       .openapi({ example: 'true' }),
   }),
 });

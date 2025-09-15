@@ -26,7 +26,9 @@ describe('Categorias', () => {
 
   describe('GET /categories', () => {
     it('deve listar todas as categorias com sucesso', async () => {
-      const { token } = await UserFactory.createUserWithRoleAndGetToken(Roles.ADMIN);
+      const { token } = await UserFactory.createUserWithRoleAndGetToken(
+        Roles.ADMIN,
+      );
 
       await CategoryFactory.createMultipleCategories(3);
 
@@ -46,7 +48,9 @@ describe('Categorias', () => {
     });
 
     it('deve retornar lista vazia quando não há categorias', async () => {
-      const { token } = await UserFactory.createUserWithRoleAndGetToken(Roles.ADMIN);
+      const { token } = await UserFactory.createUserWithRoleAndGetToken(
+        Roles.ADMIN,
+      );
 
       const response = await request(server)
         .get(apiUrl)
@@ -66,7 +70,9 @@ describe('Categorias', () => {
 
   describe('GET /categories/:id', () => {
     it('deve buscar categoria por ID com sucesso', async () => {
-      const { token } = await UserFactory.createUserWithRoleAndGetToken(Roles.ADMIN);
+      const { token } = await UserFactory.createUserWithRoleAndGetToken(
+        Roles.ADMIN,
+      );
       const category = await CategoryFactory.createCategory();
 
       const response = await request(server)
@@ -77,11 +83,16 @@ describe('Categorias', () => {
       expect(response.body.message).toBe('Categoria encontrada com sucesso.');
       expect(response.body.data).toHaveProperty('id', category.id);
       expect(response.body.data).toHaveProperty('name', category.name);
-      expect(response.body.data).toHaveProperty('description', category.description);
+      expect(response.body.data).toHaveProperty(
+        'description',
+        category.description,
+      );
     });
 
     it('deve retornar erro 404 quando categoria não existe', async () => {
-      const { token } = await UserFactory.createUserWithRoleAndGetToken(Roles.ADMIN);
+      const { token } = await UserFactory.createUserWithRoleAndGetToken(
+        Roles.ADMIN,
+      );
 
       const response = await request(server)
         .get(`${apiUrl}/999`)
@@ -99,7 +110,9 @@ describe('Categorias', () => {
 
   describe('POST /categories', () => {
     it('deve criar categoria com sucesso', async () => {
-      const { token } = await UserFactory.createUserWithRoleAndGetToken(Roles.ADMIN);
+      const { token } = await UserFactory.createUserWithRoleAndGetToken(
+        Roles.ADMIN,
+      );
       const categoryData = CategoryFactory.build().make();
 
       const response = await request(server)
@@ -111,12 +124,17 @@ describe('Categorias', () => {
       expect(response.body.message).toBe('Categoria criada com sucesso.');
       expect(response.body.data).toHaveProperty('id');
       expect(response.body.data).toHaveProperty('name', categoryData.name);
-      expect(response.body.data).toHaveProperty('description', categoryData.description);
+      expect(response.body.data).toHaveProperty(
+        'description',
+        categoryData.description,
+      );
       expect(response.body.data).toHaveProperty('status', categoryData.status);
     });
 
     it('deve criar categoria com status padrão ACTIVE quando não informado', async () => {
-      const { token } = await UserFactory.createUserWithRoleAndGetToken(Roles.ADMIN);
+      const { token } = await UserFactory.createUserWithRoleAndGetToken(
+        Roles.ADMIN,
+      );
       const categoryData = {
         name: 'Tecnologia',
         description: 'Categoria de tecnologia',
@@ -128,11 +146,16 @@ describe('Categorias', () => {
         .send(categoryData);
 
       expect(response.status).toBe(StatusCode.CREATED);
-      expect(response.body.data).toHaveProperty('status', CategoryStatus.ACTIVE);
+      expect(response.body.data).toHaveProperty(
+        'status',
+        CategoryStatus.ACTIVE,
+      );
     });
 
     it('deve retornar erro 400 quando dados inválidos', async () => {
-      const { token } = await UserFactory.createUserWithRoleAndGetToken(Roles.ADMIN);
+      const { token } = await UserFactory.createUserWithRoleAndGetToken(
+        Roles.ADMIN,
+      );
 
       const response = await request(server)
         .post(apiUrl)
@@ -153,7 +176,9 @@ describe('Categorias', () => {
 
   describe('PUT /categories/:id', () => {
     it('deve atualizar categoria com sucesso', async () => {
-      const { token } = await UserFactory.createUserWithRoleAndGetToken(Roles.ADMIN);
+      const { token } = await UserFactory.createUserWithRoleAndGetToken(
+        Roles.ADMIN,
+      );
       const category = await CategoryFactory.createCategory();
       const updateData = {
         name: 'Tecnologia Atualizada',
@@ -169,12 +194,17 @@ describe('Categorias', () => {
       expect(response.status).toBe(StatusCode.OK);
       expect(response.body.message).toBe('Categoria atualizada com sucesso.');
       expect(response.body.data).toHaveProperty('name', updateData.name);
-      expect(response.body.data).toHaveProperty('description', updateData.description);
+      expect(response.body.data).toHaveProperty(
+        'description',
+        updateData.description,
+      );
       expect(response.body.data).toHaveProperty('status', updateData.status);
     });
 
     it('deve atualizar apenas campos informados', async () => {
-      const { token } = await UserFactory.createUserWithRoleAndGetToken(Roles.ADMIN);
+      const { token } = await UserFactory.createUserWithRoleAndGetToken(
+        Roles.ADMIN,
+      );
       const category = await CategoryFactory.createCategory();
       const updateData = {
         name: 'Nome Atualizado',
@@ -187,11 +217,16 @@ describe('Categorias', () => {
 
       expect(response.status).toBe(StatusCode.OK);
       expect(response.body.data).toHaveProperty('name', updateData.name);
-      expect(response.body.data).toHaveProperty('description', category.description);
+      expect(response.body.data).toHaveProperty(
+        'description',
+        category.description,
+      );
     });
 
     it('deve retornar erro 404 quando categoria não existe', async () => {
-      const { token } = await UserFactory.createUserWithRoleAndGetToken(Roles.ADMIN);
+      const { token } = await UserFactory.createUserWithRoleAndGetToken(
+        Roles.ADMIN,
+      );
       const updateData = { name: 'Nome Atualizado' };
 
       const response = await request(server)
@@ -215,7 +250,9 @@ describe('Categorias', () => {
 
   describe('DELETE /categories/:id', () => {
     it('deve deletar categoria com sucesso', async () => {
-      const { token } = await UserFactory.createUserWithRoleAndGetToken(Roles.ADMIN);
+      const { token } = await UserFactory.createUserWithRoleAndGetToken(
+        Roles.ADMIN,
+      );
       const category = await CategoryFactory.createCategory();
 
       const response = await request(server)
@@ -227,7 +264,9 @@ describe('Categorias', () => {
     });
 
     it('deve retornar erro 404 quando categoria não existe', async () => {
-      const { token } = await UserFactory.createUserWithRoleAndGetToken(Roles.ADMIN);
+      const { token } = await UserFactory.createUserWithRoleAndGetToken(
+        Roles.ADMIN,
+      );
 
       const response = await request(server)
         .delete(`${apiUrl}/999`)

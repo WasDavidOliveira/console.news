@@ -1,5 +1,8 @@
 import { faker } from '@faker-js/faker';
-import { CreateCategoryModel, CategoryModel } from '@/types/models/v1/category.types';
+import {
+  CreateCategoryModel,
+  CategoryModel,
+} from '@/types/models/v1/category.types';
 import CategoryRepository from '@/repositories/v1/modules/category/category.repository';
 import { CreateCategorySchema } from '@/validations/v1/modules/category.validations';
 import { CategoryStatus } from '@/enums/v1/modules/category/category-status.enum';

@@ -26,7 +26,9 @@ describe('Templates', () => {
 
   describe('GET /templates', () => {
     it('deve listar todos os templates com sucesso', async () => {
-      const { token } = await UserFactory.createUserWithRoleAndGetToken(Roles.ADMIN);
+      const { token } = await UserFactory.createUserWithRoleAndGetToken(
+        Roles.ADMIN,
+      );
 
       await TemplateFactory.createMultipleTemplates(3);
 
@@ -48,7 +50,9 @@ describe('Templates', () => {
     });
 
     it('deve filtrar templates ativos com query parameter', async () => {
-      const { token } = await UserFactory.createUserWithRoleAndGetToken(Roles.ADMIN);
+      const { token } = await UserFactory.createUserWithRoleAndGetToken(
+        Roles.ADMIN,
+      );
 
       await TemplateFactory.createMultipleActiveTemplates(2);
       await TemplateFactory.createMultipleInactiveTemplates(2);
@@ -59,11 +63,15 @@ describe('Templates', () => {
 
       expect(response.status).toBe(StatusCode.OK);
       expect(response.body.data.length).toBeGreaterThanOrEqual(2);
-      expect(response.body.data.every((template: any) => template.isActive)).toBe(true);
+      expect(
+        response.body.data.every((template: any) => template.isActive),
+      ).toBe(true);
     });
 
     it('deve filtrar templates inativos com query parameter', async () => {
-      const { token } = await UserFactory.createUserWithRoleAndGetToken(Roles.ADMIN);
+      const { token } = await UserFactory.createUserWithRoleAndGetToken(
+        Roles.ADMIN,
+      );
 
       await TemplateFactory.createMultipleActiveTemplates(2);
       await TemplateFactory.createMultipleInactiveTemplates(2);
@@ -74,11 +82,15 @@ describe('Templates', () => {
 
       expect(response.status).toBe(StatusCode.OK);
       expect(response.body.data.length).toBeGreaterThanOrEqual(2);
-      expect(response.body.data.every((template: any) => !template.isActive)).toBe(true);
+      expect(
+        response.body.data.every((template: any) => !template.isActive),
+      ).toBe(true);
     });
 
     it('deve retornar lista vazia quando não há templates', async () => {
-      const { token } = await UserFactory.createUserWithRoleAndGetToken(Roles.ADMIN);
+      const { token } = await UserFactory.createUserWithRoleAndGetToken(
+        Roles.ADMIN,
+      );
 
       const response = await request(server)
         .get(apiUrl)
@@ -97,7 +109,9 @@ describe('Templates', () => {
     });
 
     it('deve retornar erro 403 quando não tem permissão de admin', async () => {
-      const { token } = await UserFactory.createUserWithRoleAndGetToken(Roles.USER);
+      const { token } = await UserFactory.createUserWithRoleAndGetToken(
+        Roles.USER,
+      );
 
       const response = await request(server)
         .get(apiUrl)
@@ -109,7 +123,9 @@ describe('Templates', () => {
 
   describe('GET /templates/preview', () => {
     it('deve retornar templates ativos para preview', async () => {
-      const { token } = await UserFactory.createUserWithRoleAndGetToken(Roles.ADMIN);
+      const { token } = await UserFactory.createUserWithRoleAndGetToken(
+        Roles.ADMIN,
+      );
 
       await TemplateFactory.createMultipleActiveTemplates(2);
       await TemplateFactory.createMultipleInactiveTemplates(2);
@@ -119,9 +135,13 @@ describe('Templates', () => {
         .set('Authorization', `Bearer ${token}`);
 
       expect(response.status).toBe(StatusCode.OK);
-      expect(response.body.message).toBe('Templates para preview encontrados com sucesso.');
+      expect(response.body.message).toBe(
+        'Templates para preview encontrados com sucesso.',
+      );
       expect(response.body.data.length).toBeGreaterThanOrEqual(2);
-      expect(response.body.data.every((template: any) => template.isActive)).toBe(true);
+      expect(
+        response.body.data.every((template: any) => template.isActive),
+      ).toBe(true);
       expect(response.body.data[0]).toHaveProperty('id');
       expect(response.body.data[0]).toHaveProperty('name');
       expect(response.body.data[0]).toHaveProperty('description');
@@ -134,7 +154,9 @@ describe('Templates', () => {
 
   describe('GET /templates/:id', () => {
     it('deve buscar template por ID com sucesso', async () => {
-      const { token } = await UserFactory.createUserWithRoleAndGetToken(Roles.ADMIN);
+      const { token } = await UserFactory.createUserWithRoleAndGetToken(
+        Roles.ADMIN,
+      );
       const template = await TemplateFactory.createTemplate();
 
       const response = await request(server)
@@ -145,16 +167,24 @@ describe('Templates', () => {
       expect(response.body.message).toBe('Template encontrado com sucesso.');
       expect(response.body.data).toHaveProperty('id', template.id);
       expect(response.body.data).toHaveProperty('name', template.name);
-      expect(response.body.data).toHaveProperty('description', template.description);
+      expect(response.body.data).toHaveProperty(
+        'description',
+        template.description,
+      );
       expect(response.body.data).toHaveProperty('html', template.html);
       expect(response.body.data).toHaveProperty('text', template.text);
       expect(response.body.data).toHaveProperty('css', template.css);
-      expect(response.body.data).toHaveProperty('variables', template.variables);
+      expect(response.body.data).toHaveProperty(
+        'variables',
+        template.variables,
+      );
       expect(response.body.data).toHaveProperty('isActive', template.isActive);
     });
 
     it('deve retornar erro 404 quando template não existe', async () => {
-      const { token } = await UserFactory.createUserWithRoleAndGetToken(Roles.ADMIN);
+      const { token } = await UserFactory.createUserWithRoleAndGetToken(
+        Roles.ADMIN,
+      );
 
       const response = await request(server)
         .get(`${apiUrl}/999`)
@@ -172,7 +202,9 @@ describe('Templates', () => {
 
   describe('POST /templates', () => {
     it('deve criar template com sucesso', async () => {
-      const { token } = await UserFactory.createUserWithRoleAndGetToken(Roles.ADMIN);
+      const { token } = await UserFactory.createUserWithRoleAndGetToken(
+        Roles.ADMIN,
+      );
       const templateData = TemplateFactory.build().make();
 
       const response = await request(server)
@@ -184,16 +216,27 @@ describe('Templates', () => {
       expect(response.body.message).toBe('Template criado com sucesso.');
       expect(response.body.data).toHaveProperty('id');
       expect(response.body.data).toHaveProperty('name', templateData.name);
-      expect(response.body.data).toHaveProperty('description', templateData.description);
+      expect(response.body.data).toHaveProperty(
+        'description',
+        templateData.description,
+      );
       expect(response.body.data).toHaveProperty('html', templateData.html);
       expect(response.body.data).toHaveProperty('text', templateData.text);
       expect(response.body.data).toHaveProperty('css', templateData.css);
-      expect(response.body.data).toHaveProperty('variables', templateData.variables);
-      expect(response.body.data).toHaveProperty('isActive', templateData.isActive);
+      expect(response.body.data).toHaveProperty(
+        'variables',
+        templateData.variables,
+      );
+      expect(response.body.data).toHaveProperty(
+        'isActive',
+        templateData.isActive,
+      );
     });
 
     it('deve criar template com valores padrão quando não informados', async () => {
-      const { token } = await UserFactory.createUserWithRoleAndGetToken(Roles.ADMIN);
+      const { token } = await UserFactory.createUserWithRoleAndGetToken(
+        Roles.ADMIN,
+      );
       const templateData = {
         name: 'Template Simples',
         html: '<html><body>{{title}}</body></html>',
@@ -210,7 +253,9 @@ describe('Templates', () => {
     });
 
     it('deve retornar erro 400 quando dados inválidos', async () => {
-      const { token } = await UserFactory.createUserWithRoleAndGetToken(Roles.ADMIN);
+      const { token } = await UserFactory.createUserWithRoleAndGetToken(
+        Roles.ADMIN,
+      );
 
       const response = await request(server)
         .post(apiUrl)
@@ -231,13 +276,19 @@ describe('Templates', () => {
 
   describe('PUT /templates/:id', () => {
     it('deve atualizar template com sucesso', async () => {
-      const { token } = await UserFactory.createUserWithRoleAndGetToken(Roles.ADMIN);
+      const { token } = await UserFactory.createUserWithRoleAndGetToken(
+        Roles.ADMIN,
+      );
       const template = await TemplateFactory.createTemplate();
       const updateData = {
         name: 'Template Atualizado',
         description: 'Descrição atualizada',
         html: '<html><body><h1>{{title}}</h1><p>{{content}}</p></body></html>',
-        variables: [TemplateVariable.TITLE, TemplateVariable.CONTENT, TemplateVariable.SUBJECT],
+        variables: [
+          TemplateVariable.TITLE,
+          TemplateVariable.CONTENT,
+          TemplateVariable.SUBJECT,
+        ],
         isActive: false,
       };
 
@@ -249,14 +300,25 @@ describe('Templates', () => {
       expect(response.status).toBe(StatusCode.OK);
       expect(response.body.message).toBe('Template atualizado com sucesso.');
       expect(response.body.data).toHaveProperty('name', updateData.name);
-      expect(response.body.data).toHaveProperty('description', updateData.description);
+      expect(response.body.data).toHaveProperty(
+        'description',
+        updateData.description,
+      );
       expect(response.body.data).toHaveProperty('html', updateData.html);
-      expect(response.body.data).toHaveProperty('variables', updateData.variables);
-      expect(response.body.data).toHaveProperty('isActive', updateData.isActive);
+      expect(response.body.data).toHaveProperty(
+        'variables',
+        updateData.variables,
+      );
+      expect(response.body.data).toHaveProperty(
+        'isActive',
+        updateData.isActive,
+      );
     });
 
     it('deve atualizar apenas campos informados', async () => {
-      const { token } = await UserFactory.createUserWithRoleAndGetToken(Roles.ADMIN);
+      const { token } = await UserFactory.createUserWithRoleAndGetToken(
+        Roles.ADMIN,
+      );
       const template = await TemplateFactory.createTemplate();
       const updateData = {
         name: 'Nome Atualizado',
@@ -269,12 +331,17 @@ describe('Templates', () => {
 
       expect(response.status).toBe(StatusCode.OK);
       expect(response.body.data).toHaveProperty('name', updateData.name);
-      expect(response.body.data).toHaveProperty('description', template.description);
+      expect(response.body.data).toHaveProperty(
+        'description',
+        template.description,
+      );
       expect(response.body.data).toHaveProperty('html', template.html);
     });
 
     it('deve retornar erro 404 quando template não existe', async () => {
-      const { token } = await UserFactory.createUserWithRoleAndGetToken(Roles.ADMIN);
+      const { token } = await UserFactory.createUserWithRoleAndGetToken(
+        Roles.ADMIN,
+      );
       const updateData = { name: 'Nome Atualizado' };
 
       const response = await request(server)
@@ -298,7 +365,9 @@ describe('Templates', () => {
 
   describe('PATCH /templates/:id/activate', () => {
     it('deve ativar template com sucesso', async () => {
-      const { token } = await UserFactory.createUserWithRoleAndGetToken(Roles.ADMIN);
+      const { token } = await UserFactory.createUserWithRoleAndGetToken(
+        Roles.ADMIN,
+      );
       const template = await TemplateFactory.createInactiveTemplate();
 
       const response = await request(server)
@@ -311,7 +380,9 @@ describe('Templates', () => {
     });
 
     it('deve retornar erro 404 quando template não existe', async () => {
-      const { token } = await UserFactory.createUserWithRoleAndGetToken(Roles.ADMIN);
+      const { token } = await UserFactory.createUserWithRoleAndGetToken(
+        Roles.ADMIN,
+      );
 
       const response = await request(server)
         .patch(`${apiUrl}/999/activate`)
@@ -323,7 +394,9 @@ describe('Templates', () => {
 
   describe('PATCH /templates/:id/deactivate', () => {
     it('deve desativar template com sucesso', async () => {
-      const { token } = await UserFactory.createUserWithRoleAndGetToken(Roles.ADMIN);
+      const { token } = await UserFactory.createUserWithRoleAndGetToken(
+        Roles.ADMIN,
+      );
       const template = await TemplateFactory.createActiveTemplate();
 
       const response = await request(server)
@@ -336,7 +409,9 @@ describe('Templates', () => {
     });
 
     it('deve retornar erro 404 quando template não existe', async () => {
-      const { token } = await UserFactory.createUserWithRoleAndGetToken(Roles.ADMIN);
+      const { token } = await UserFactory.createUserWithRoleAndGetToken(
+        Roles.ADMIN,
+      );
 
       const response = await request(server)
         .patch(`${apiUrl}/999/deactivate`)
@@ -348,7 +423,9 @@ describe('Templates', () => {
 
   describe('DELETE /templates/:id', () => {
     it('deve deletar template com sucesso', async () => {
-      const { token } = await UserFactory.createUserWithRoleAndGetToken(Roles.ADMIN);
+      const { token } = await UserFactory.createUserWithRoleAndGetToken(
+        Roles.ADMIN,
+      );
       const template = await TemplateFactory.createTemplate();
 
       const response = await request(server)
@@ -360,7 +437,9 @@ describe('Templates', () => {
     });
 
     it('deve retornar erro 404 quando template não existe', async () => {
-      const { token } = await UserFactory.createUserWithRoleAndGetToken(Roles.ADMIN);
+      const { token } = await UserFactory.createUserWithRoleAndGetToken(
+        Roles.ADMIN,
+      );
 
       const response = await request(server)
         .delete(`${apiUrl}/999`)

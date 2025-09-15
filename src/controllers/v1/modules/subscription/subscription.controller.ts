@@ -22,7 +22,9 @@ export class SubscriptionController {
   };
 
   show = async (req: Request, res: Response) => {
-    const subscription = await this.subscriptionService.show(Number(req.params.id));
+    const subscription = await this.subscriptionService.show(
+      Number(req.params.id),
+    );
 
     res.status(StatusCode.OK).json({
       message: 'Inscrição encontrada com sucesso',
@@ -60,7 +62,9 @@ export class SubscriptionController {
   };
 
   activate = async (req: Request, res: Response) => {
-    const subscription = await this.subscriptionService.activate(Number(req.params.id));
+    const subscription = await this.subscriptionService.activate(
+      Number(req.params.id),
+    );
 
     res.status(StatusCode.OK).json({
       message: 'Inscrição ativada com sucesso',
@@ -69,7 +73,9 @@ export class SubscriptionController {
   };
 
   deactivate = async (req: Request, res: Response) => {
-    const subscription = await this.subscriptionService.deactivate(Number(req.params.id));
+    const subscription = await this.subscriptionService.deactivate(
+      Number(req.params.id),
+    );
 
     res.status(StatusCode.OK).json({
       message: 'Inscrição desativada com sucesso',

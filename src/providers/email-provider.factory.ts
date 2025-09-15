@@ -10,7 +10,7 @@ providers.set('resend', () => new ResendEmailProvider());
 export class EmailProviderFactory {
   static createProvider(): IEmailProvider {
     const providerFactory = providers.get(emailConfig.provider);
-    
+
     if (!providerFactory) {
       throw new Error(`Provider '${emailConfig.provider}' não suportado`);
     }

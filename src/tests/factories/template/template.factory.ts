@@ -1,5 +1,8 @@
 import { faker } from '@faker-js/faker';
-import { CreateTemplateModel, TemplateModel } from '@/types/models/v1/template.types';
+import {
+  CreateTemplateModel,
+  TemplateModel,
+} from '@/types/models/v1/template.types';
 import TemplateRepository from '@/repositories/v1/modules/template/template.repository';
 import { CreateTemplateSchema } from '@/validations/v1/modules/template.validations';
 import { TemplateVariable } from '@/enums/v1/modules/template/template-variables.enum';
@@ -128,13 +131,19 @@ export class TemplateFactory {
     count: number,
     overrides: Partial<CreateTemplateModel> = {},
   ): Promise<TemplateModel[]> {
-    return await this.createMultipleTemplates(count, { ...overrides, isActive: true });
+    return await this.createMultipleTemplates(count, {
+      ...overrides,
+      isActive: true,
+    });
   }
 
   static async createMultipleInactiveTemplates(
     count: number,
     overrides: Partial<CreateTemplateModel> = {},
   ): Promise<TemplateModel[]> {
-    return await this.createMultipleTemplates(count, { ...overrides, isActive: false });
+    return await this.createMultipleTemplates(count, {
+      ...overrides,
+      isActive: false,
+    });
   }
 }

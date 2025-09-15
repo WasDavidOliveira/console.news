@@ -35,10 +35,7 @@ export const updateSubscriptionSchema = z.object({
       .optional()
       .openapi({ example: SubscriptionStatus.INACTIVE }),
 
-    isActive: z
-      .boolean()
-      .optional()
-      .openapi({ example: false }),
+    isActive: z.boolean().optional().openapi({ example: false }),
   }),
 });
 
@@ -63,12 +60,20 @@ export const subscriptionQuerySchema = z.object({
     isActive: z
       .string()
       .optional()
-      .transform(val => val === 'true' ? true : val === 'false' ? false : undefined)
+      .transform(val =>
+        val === 'true' ? true : val === 'false' ? false : undefined,
+      )
       .openapi({ example: 'true' }),
   }),
 });
 
-export type CreateSubscriptionSchema = z.infer<typeof createSubscriptionSchema>['body'];
-export type UpdateSubscriptionSchema = z.infer<typeof updateSubscriptionSchema>['body'];
+export type CreateSubscriptionSchema = z.infer<
+  typeof createSubscriptionSchema
+>['body'];
+export type UpdateSubscriptionSchema = z.infer<
+  typeof updateSubscriptionSchema
+>['body'];
 export type SubscriptionParamsSchema = z.infer<typeof subscriptionParamsSchema>;
-export type SubscriptionQuerySchema = z.infer<typeof subscriptionQuerySchema>['query'];
+export type SubscriptionQuerySchema = z.infer<
+  typeof subscriptionQuerySchema
+>['query'];

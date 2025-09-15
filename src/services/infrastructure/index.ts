@@ -1,1 +1,4 @@
-export { EmailService, default as emailService } from '@/services/infrastructure/email.service';
+export {
+  EmailService,
+  default as emailService,
+} from '@/services/infrastructure/email.service';

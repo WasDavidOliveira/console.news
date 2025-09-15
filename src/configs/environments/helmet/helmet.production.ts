@@ -7,14 +7,14 @@ export const productionHelmetConfig: HelmetOptions = {
       scriptSrc: [
         "'self'",
         "'unsafe-inline'",
-        "https://cdn.jsdelivr.net",
-        "https://unpkg.com"
+        'https://cdn.jsdelivr.net',
+        'https://unpkg.com',
       ],
       styleSrc: [
         "'self'",
         "'unsafe-inline'",
-        "https://cdn.jsdelivr.net",
-        "https://unpkg.com"
+        'https://cdn.jsdelivr.net',
+        'https://unpkg.com',
       ],
       connectSrc: ["'self'"],
       frameSrc: ["'none'"],

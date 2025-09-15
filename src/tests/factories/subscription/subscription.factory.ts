@@ -1,5 +1,8 @@
 import { faker } from '@faker-js/faker';
-import { CreateSubscriptionModel, SubscriptionModel } from '@/types/models/v1/subscription.types';
+import {
+  CreateSubscriptionModel,
+  SubscriptionModel,
+} from '@/types/models/v1/subscription.types';
 import { CreateSubscriptionSchema } from '@/validations/v1/modules/subscription.validations';
 import SubscriptionRepository from '@/repositories/v1/modules/subscription/subscription.repository';
 import { UserFactory } from '@/tests/factories/auth/user.factory';
@@ -35,7 +38,7 @@ class SubscriptionFactoryBuilder {
 
   async create(): Promise<{ subscription: SubscriptionModel; user: any }> {
     const { user } = await UserFactory.build().create();
-    
+
     const subscriptionData: CreateSubscriptionModel = {
       userId: user.id,
       ...this.currentOverrides,
@@ -58,21 +61,31 @@ class SubscriptionFactoryBuilder {
     return await SubscriptionRepository.create(subscriptionData);
   }
 
-  async createActive(): Promise<{ subscription: SubscriptionModel; user: any }> {
+  async createActive(): Promise<{
+    subscription: SubscriptionModel;
+    user: any;
+  }> {
     return await this.state({ isActive: true }).create();
   }
 
-  async createInactive(): Promise<{ subscription: SubscriptionModel; user: any }> {
+  async createInactive(): Promise<{
+    subscription: SubscriptionModel;
+    user: any;
+  }> {
     return await this.state({ isActive: false }).create();
   }
 
-  async createWithStatus(status: SubscriptionStatus): Promise<{ subscription: SubscriptionModel; user: any }> {
+  async createWithStatus(
+    status: SubscriptionStatus,
+  ): Promise<{ subscription: SubscriptionModel; user: any }> {
     return await this.state({ status }).create();
   }
 }
 
 export class SubscriptionFactory {
-  static build(overrides: PartialCreateSubscription = {}): SubscriptionFactoryBuilder {
+  static build(
+    overrides: PartialCreateSubscription = {},
+  ): SubscriptionFactoryBuilder {
     return new SubscriptionFactoryBuilder(overrides);
   }
 

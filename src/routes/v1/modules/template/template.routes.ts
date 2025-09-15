@@ -10,16 +10,9 @@ import { validateRequest } from '@/middlewares/validation/validate-request.middl
 
 const router: Router = Router();
 
-router.get(
-  '/',
-  validateRequest(templateQuerySchema),
-  TemplateController.index,
-);
+router.get('/', validateRequest(templateQuerySchema), TemplateController.index);
 
-router.get(
-  '/preview',
-  TemplateController.preview,
-);
+router.get('/preview', TemplateController.preview);
 
 router.get(
   '/:id',
