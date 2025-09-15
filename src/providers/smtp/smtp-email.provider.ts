@@ -1,9 +1,9 @@
 import nodemailer from 'nodemailer';
 import { EmailOptions, EmailResponse } from '@/types/models/v1/email.types';
 import { emailConfig } from '@/configs/email.config';
-import { EmailServiceError } from '@/utils/core/app-error.utils';
+import { IEmailProvider } from '@/types/providers/email-provider.interface';
 
-export class EmailProvider {
+export class SmtpEmailProvider implements IEmailProvider {
   protected transporter: nodemailer.Transporter;
 
   constructor() {
@@ -15,7 +15,7 @@ export class EmailProvider {
     });
   }
 
-  async sendEmail(options: EmailOptions): Promise<EmailResponse>{
+  async sendEmail(options: EmailOptions): Promise<EmailResponse> {
     const mailOptions = {
       from: options.from ?? emailConfig.from,
       to: options.to,
@@ -26,12 +26,6 @@ export class EmailProvider {
 
     const response = await this.transporter.sendMail(mailOptions);
 
-    if (response.rejected && response.rejected.length > 0) {
-      throw new EmailServiceError(
-        `Falha ao enviar email para: ${response.rejected.join(', ')}`
-      );
-    }
-
     return response;
   }
 
@@ -39,5 +33,3 @@ export class EmailProvider {
     return await this.transporter.verify();
   }
 }
-
-export default new EmailProvider();

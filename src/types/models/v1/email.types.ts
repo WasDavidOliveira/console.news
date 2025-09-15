@@ -38,3 +38,17 @@ export interface EmailResponse {
   };
   messageId: string;
 }
+
+export interface ResendEmailResponse {
+  id: string;
+  from: string;
+  to: string[];
+  created_at: string;
+  subject: string;
+  html: string;
+  text: string;
+  bcc: string[];
+  cc: string[];
+  reply_to: string[];
+  last_event: string;
+}

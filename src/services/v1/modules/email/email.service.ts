@@ -1,13 +1,9 @@
-import { EmailProvider } from '@/providers/email/email.provider';
+import { emailProvider } from '@/providers';
 import { EmailOptions, WelcomeEmailData, NewsletterEmailData } from '@/types/models/v1/email.types';
 import { EmailResponse } from '@/types/models/v1/email.types';
 
 export class EmailService {
-  protected emailProvider: EmailProvider;
-
-  constructor() {
-    this.emailProvider = new EmailProvider();
-  }
+  protected emailProvider = emailProvider;
 
   async sendWelcomeEmail(data: WelcomeEmailData): Promise<EmailResponse> {
     const emailOptions: EmailOptions = {

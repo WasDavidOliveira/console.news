@@ -11,4 +11,6 @@ export const emailConfig = {
     pass: process.env.EMAIL_PASS,
   },
   from: process.env.EMAIL_FROM || 'newsletter@console.news',
+  resendApiKey: process.env.RESEND_API_KEY,
+  provider: process.env.EMAIL_PROVIDER || 'smtp',
 };
