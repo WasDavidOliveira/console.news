@@ -7,8 +7,15 @@ import {
   SubscriptionQuerySchema,
 } from '@/validations/v1/modules/subscription.validations';
 import bcrypt from 'bcrypt';
+import { EmailService } from '@/services/v1/modules/email/email.service';
 
 export class SubscriptionService {
+  protected emailService: EmailService;
+
+  constructor() {
+    this.emailService = new EmailService();
+  }
+
   async index(query?: SubscriptionQuerySchema) {
     if (query) {
       return await SubscriptionRepository.findByQuery(query);
@@ -50,6 +57,11 @@ export class SubscriptionService {
 
     const subscription = await SubscriptionRepository.create({
       userId: user.id,
+    });
+
+    await this.emailService.sendWelcomeEmail({
+      userName: user.name,
+      userEmail: user.email,
     });
 
     return subscription;
