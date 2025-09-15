@@ -31,7 +31,8 @@ export class SubscriptionService {
     let user = await UserRepository.findByEmail(data.email);
 
     if (!user) {
-      const password = data.email + data.name;
+      const password = String(data.email + data.name).toLowerCase().trim();
+      
       const passwordHash = await bcrypt.hash(password, 10);
 
       user = await UserRepository.create({
