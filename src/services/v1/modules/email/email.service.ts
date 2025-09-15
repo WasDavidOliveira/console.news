@@ -1,5 +1,6 @@
 import { EmailProvider } from '@/providers/email/email.provider';
 import { EmailOptions, WelcomeEmailData, NewsletterEmailData } from '@/types/models/v1/email.types';
+import { EmailResponse } from '@/types/models/v1/email.types';
 
 export class EmailService {
   protected emailProvider: EmailProvider;
@@ -8,7 +9,7 @@ export class EmailService {
     this.emailProvider = new EmailProvider();
   }
 
-  async sendWelcomeEmail(data: WelcomeEmailData): Promise<void> {
+  async sendWelcomeEmail(data: WelcomeEmailData): Promise<EmailResponse> {
     const emailOptions: EmailOptions = {
       to: data.userEmail,
       subject: 'Bem-vindo à Newsletter Console.News!',
@@ -22,10 +23,12 @@ export class EmailService {
       `,
     };
 
-    await this.emailProvider.sendEmail(emailOptions);
+    const email = await this.emailProvider.sendEmail(emailOptions);
+
+    return email;
   }
 
-  async sendNewsletterEmail(data: NewsletterEmailData): Promise<void> {
+  async sendNewsletterEmail(data: NewsletterEmailData): Promise<EmailResponse> {
     const emailOptions: EmailOptions = {
       to: data.userEmail,
       subject: data.newsletterTitle,
@@ -38,11 +41,15 @@ export class EmailService {
       `,
     };
 
-    await this.emailProvider.sendEmail(emailOptions);
+    const email = await this.emailProvider.sendEmail(emailOptions);
+
+    return email;
   }
 
-  async sendCustomEmail(options: EmailOptions): Promise<void> {
-    await this.emailProvider.sendEmail(options);
+  async sendCustomEmail(options: EmailOptions): Promise<EmailResponse> {
+    const email = await this.emailProvider.sendEmail(options);
+
+    return email;
   }
 
   async verifyConnection(): Promise<boolean> {

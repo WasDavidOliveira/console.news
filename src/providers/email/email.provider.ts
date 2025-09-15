@@ -1,9 +1,10 @@
 import nodemailer from 'nodemailer';
-import { EmailOptions } from '@/types/models/v1/email.types';
+import { EmailOptions, EmailResponse } from '@/types/models/v1/email.types';
 import { emailConfig } from '@/configs/email.config';
+import { EmailServiceError } from '@/utils/core/app-error.utils';
 
 export class EmailProvider {
-  private transporter: nodemailer.Transporter;
+  protected transporter: nodemailer.Transporter;
 
   constructor() {
     this.transporter = nodemailer.createTransport({
@@ -14,16 +15,24 @@ export class EmailProvider {
     });
   }
 
-  async sendEmail(options: EmailOptions): Promise<void> {
+  async sendEmail(options: EmailOptions): Promise<EmailResponse>{
     const mailOptions = {
-      from: options.from || emailConfig.from,
+      from: options.from ?? emailConfig.from,
       to: options.to,
       subject: options.subject,
       text: options.text,
       html: options.html,
     };
 
-    await this.transporter.sendMail(mailOptions);
+    const response = await this.transporter.sendMail(mailOptions);
+
+    if (response.rejected && response.rejected.length > 0) {
+      throw new EmailServiceError(
+        `Falha ao enviar email para: ${response.rejected.join(', ')}`
+      );
+    }
+
+    return response;
   }
 
   async verifyConnection(): Promise<boolean> {

@@ -31,6 +31,12 @@ export class BadRequestError extends AppError {
   }
 }
 
+export class UnprocessableEntityError extends AppError {
+  constructor(message: string = 'Entidade não processável') {
+    super(message, 422);
+  }
+}
+
 export class UnauthorizedError extends AppError {
   constructor(message: string = 'Não autorizado') {
     super(message, 401);
@@ -67,5 +73,11 @@ export class ConflictError extends AppError {
 export class ServiceUnavailableError extends AppError {
   constructor(message: string = 'Serviço indisponível') {
     super(message, 503);
+  }
+}
+
+export class EmailServiceError extends AppError {
+  constructor(message: string = 'Erro no serviço de email') {
+    super(message, 502);
   }
 }

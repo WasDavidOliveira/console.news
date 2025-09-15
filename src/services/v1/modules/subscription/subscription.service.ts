@@ -1,4 +1,4 @@
-import { NotFoundError, ConflictError } from '@/utils/core/app-error.utils';
+import { NotFoundError, ConflictError, UnprocessableEntityError } from '@/utils/core/app-error.utils';
 import SubscriptionRepository from '@/repositories/v1/modules/subscription/subscription.repository';
 import UserRepository from '@/repositories/v1/modules/auth/user.repository';
 import {
@@ -55,13 +55,17 @@ export class SubscriptionService {
       throw new ConflictError('Usuário já possui uma inscrição ativa');
     }
 
-    const subscription = await SubscriptionRepository.create({
-      userId: user.id,
-    });
-
-    await this.emailService.sendWelcomeEmail({
+    const welcomeEmail = await this.emailService.sendWelcomeEmail({
       userName: user.name,
       userEmail: user.email,
+    });
+
+    if (!welcomeEmail) {
+      throw new UnprocessableEntityError('Erro ao enviar email de boas-vindas');
+    }
+
+    const subscription = await SubscriptionRepository.create({
+      userId: user.id,
     });
 
     return subscription;
