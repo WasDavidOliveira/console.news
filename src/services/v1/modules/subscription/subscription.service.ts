@@ -7,7 +7,7 @@ import {
   SubscriptionQuerySchema,
 } from '@/validations/v1/modules/subscription.validations';
 import bcrypt from 'bcrypt';
-import { EmailService } from '@/services/v1/modules/email/email.service';
+import { EmailService } from '@/services/infrastructure';
 
 export class SubscriptionService {
   protected emailService: EmailService;
