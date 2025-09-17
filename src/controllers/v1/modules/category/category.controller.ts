@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import { CategoryService } from '@/services/v1/modules/category/category.service';
 import { StatusCode } from '@/constants/status-code.constants';
+import { paginationQuerySchema } from '@/validations/core/pagination.validations';
 
 export class CategoryController {
   protected categoryService: CategoryService;
@@ -15,6 +16,17 @@ export class CategoryController {
     res.status(StatusCode.OK).json({
       message: 'Categorias encontradas com sucesso.',
       data: categories,
+    });
+  };
+
+  index = async (req: Request, res: Response) => {
+    const { page, limit } = paginationQuerySchema.parse(req.query);
+    const result = await this.categoryService.index(page, limit);
+
+    res.status(StatusCode.OK).json({
+      message: 'Categorias encontradas com sucesso.',
+      data: result.data,
+      meta: result.meta,
     });
   };
 

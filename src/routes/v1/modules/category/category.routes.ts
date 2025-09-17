@@ -4,12 +4,17 @@ import {
   createCategorySchema,
   updateCategorySchema,
   categoryParamsSchema,
+  categoryPaginationSchema,
 } from '@/validations/v1/modules/category.validations';
 import { validateRequest } from '@/middlewares/validation/validate-request.middlewares';
 
 const router: Router = Router();
 
-router.get('/', CategoryController.show);
+router.get(
+  '/',
+  validateRequest(categoryPaginationSchema),
+  CategoryController.index,
+);
 
 router.get(
   '/:id',

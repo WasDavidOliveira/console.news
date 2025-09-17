@@ -67,6 +67,30 @@ export const categoryParamsSchema = z.object({
   }),
 });
 
+export const categoryPaginationSchema = z.object({
+  query: z.object({
+    page: z
+      .string()
+      .optional()
+      .default('1')
+      .transform(val => parseInt(val, 10))
+      .refine(val => val >= 1, {
+        message: 'Página deve ser maior ou igual a 1',
+      })
+      .openapi({ example: 1 }),
+    limit: z
+      .string()
+      .optional()
+      .default('10')
+      .transform(val => parseInt(val, 10))
+      .refine(val => val >= 1 && val <= 100, {
+        message: 'Limite deve estar entre 1 e 100',
+      })
+      .openapi({ example: 10 }),
+  }),
+});
+
 export type CreateCategorySchema = z.infer<typeof createCategorySchema>['body'];
 export type UpdateCategorySchema = z.infer<typeof updateCategorySchema>['body'];
 export type CategoryParamsSchema = z.infer<typeof categoryParamsSchema>;
+export type CategoryPaginationSchema = z.infer<typeof categoryPaginationSchema>;

@@ -4,12 +4,21 @@ import {
   CreateCategorySchema,
   UpdateCategorySchema,
 } from '@/validations/v1/modules/category.validations';
+import { PaginatedResult } from '@/types/core/pagination.types';
+import { CategoryModel } from '@/types/models/v1/category.types';
 
 export class CategoryService {
   async show() {
     const categories = await CategoryRepository.findAll();
 
     return categories;
+  }
+
+  async index(
+    page: number,
+    limit: number,
+  ): Promise<PaginatedResult<CategoryModel>> {
+    return CategoryRepository.findAllPaginated(page, limit);
   }
 
   async findById(id: number) {

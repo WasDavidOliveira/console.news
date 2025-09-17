@@ -1,11 +1,13 @@
 import { categories } from '@/db/schema/v1/category.schema';
 import { db } from '@/db/db.connection';
-import { eq } from 'drizzle-orm';
+import { eq, desc } from 'drizzle-orm';
 import {
   CategoryModel,
   CreateCategoryModel,
   UpdateCategoryModel,
 } from '@/types/models/v1/category.types';
+import PaginationUtils from '@/utils/core/pagination.utils';
+import { PaginatedResult } from '@/types/core/pagination.types';
 
 export class CategoryRepository {
   async findById(id: number): Promise<CategoryModel | null> {
@@ -22,6 +24,19 @@ export class CategoryRepository {
     const categoriesResults = await db.select().from(categories);
 
     return categoriesResults;
+  }
+
+  async findAllPaginated(
+    page: number,
+    limit: number,
+  ): Promise<PaginatedResult<CategoryModel>> {
+    return PaginationUtils.paginate(
+      categories,
+      page,
+      limit,
+      undefined,
+      desc(categories.createdAt),
+    );
   }
 
   async update(
