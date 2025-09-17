@@ -53,7 +53,7 @@ export class EmailService {
   }
 
   async verifyConnection(): Promise<boolean> {
-    return await this.emailProvider.verifyConnection();
+    return this.emailProvider.verifyConnection();
   }
 }
 
