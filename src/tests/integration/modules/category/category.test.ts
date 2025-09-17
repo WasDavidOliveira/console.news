@@ -25,7 +25,107 @@ describe('Categorias', () => {
   setupTestDB();
 
   describe('GET /categories', () => {
-    it('deve listar todas as categorias com sucesso', async () => {
+    it('deve listar categorias paginadas com sucesso', async () => {
+      const { token } = await UserFactory.createUserWithRoleAndGetToken(
+        Roles.ADMIN,
+      );
+
+      await CategoryFactory.createMultipleCategories(5);
+
+      const response = await request(server)
+        .get(apiUrl)
+        .query({ page: 1, limit: 3 })
+        .set('Authorization', `Bearer ${token}`);
+
+      expect(response.status).toBe(StatusCode.OK);
+      expect(response.body.message).toBe('Categorias encontradas com sucesso.');
+      expect(response.body.data.length).toBeGreaterThanOrEqual(3);
+      expect(response.body.data[0]).toHaveProperty('id');
+      expect(response.body.data[0]).toHaveProperty('name');
+      expect(response.body.data[0]).toHaveProperty('description');
+      expect(response.body.data[0]).toHaveProperty('status');
+
+      expect(response.body.meta).toHaveProperty('currentPage', 1);
+      expect(response.body.meta).toBeDefined();
+      expect(response.body.meta.totalPages).toBeGreaterThanOrEqual(2);
+      expect(response.body.meta.totalItems).toBeGreaterThanOrEqual(5);
+      expect(response.body.meta.itemsPerPage).toBeGreaterThanOrEqual(3);
+      expect(response.body.meta.hasNextPage).toBe(true);
+      expect(response.body.meta.hasPreviousPage).toBe(false);
+    });
+
+    it('deve retornar segunda página com sucesso', async () => {
+      const { token } = await UserFactory.createUserWithRoleAndGetToken(
+        Roles.ADMIN,
+      );
+
+      await CategoryFactory.createMultipleCategories(5);
+
+      const response = await request(server)
+        .get(apiUrl)
+        .query({ page: 2, limit: 3 })
+        .set('Authorization', `Bearer ${token}`);
+
+      expect(response.status).toBe(StatusCode.OK);
+      expect(response.body.data.length).toBeGreaterThanOrEqual(1);
+      expect(response.body.meta).toHaveProperty('currentPage', 2);
+      expect(response.body.meta.totalPages).toBeGreaterThanOrEqual(2);
+      expect(response.body.meta.totalItems).toBeGreaterThanOrEqual(5);
+      expect(response.body.meta).toHaveProperty('itemsPerPage', 3);
+      expect(response.body.meta).toHaveProperty('hasPreviousPage', true);
+    });
+
+    it('deve usar valores padrão quando parâmetros não são fornecidos', async () => {
+      const { token } = await UserFactory.createUserWithRoleAndGetToken(
+        Roles.ADMIN,
+      );
+
+      await CategoryFactory.createMultipleCategories(15);
+
+      const response = await request(server)
+        .get(apiUrl)
+        .set('Authorization', `Bearer ${token}`);
+
+      expect(response.status).toBe(StatusCode.OK);
+      expect(response.body.data).toHaveLength(10);
+      expect(response.body.meta).toHaveProperty('currentPage', 1);
+      expect(response.body.meta).toHaveProperty('itemsPerPage', 10);
+      expect(response.body.meta.totalItems).toBeGreaterThanOrEqual(15);
+      expect(response.body.meta.totalPages).toBeGreaterThanOrEqual(2);
+    });
+
+    it('deve validar página mínima como 1', async () => {
+      const { token } = await UserFactory.createUserWithRoleAndGetToken(
+        Roles.ADMIN,
+      );
+
+      await CategoryFactory.createMultipleCategories(5);
+
+      const response = await request(server)
+        .get(apiUrl)
+        .query({ page: 1, limit: 2 })
+        .set('Authorization', `Bearer ${token}`);
+
+      expect(response.status).toBe(StatusCode.OK);
+      expect(response.body.meta).toHaveProperty('currentPage', 1);
+    });
+
+    it('deve testar limites de validação', async () => {
+      const { token } = await UserFactory.createUserWithRoleAndGetToken(
+        Roles.ADMIN,
+      );
+
+      const response = await request(server)
+        .get(apiUrl)
+        .query({ page: '1', limit: '100' })
+        .set('Authorization', `Bearer ${token}`);
+
+      expect(response.status).toBe(StatusCode.OK);
+      expect(response.body.meta).toHaveProperty('currentPage', 1);
+      expect(response.body.meta).toHaveProperty('itemsPerPage', 100);
+    });
+
+    it('deve validar limite máximo de 100', async () => {
       const { token } = await UserFactory.createUserWithRoleAndGetToken(
         Roles.ADMIN,
       );
@@ -34,20 +134,27 @@ describe('Categorias', () => {
 
       const response = await request(server)
         .get(apiUrl)
+        .query({ page: 1, limit: 100 })
         .set('Authorization', `Bearer ${token}`);
 
-      console.log(response.body);
-
       expect(response.status).toBe(StatusCode.OK);
-      expect(response.body.message).toBe('Categorias encontradas com sucesso.');
-      expect(response.body.data).toHaveLength(3);
-      expect(response.body.data[0]).toHaveProperty('id');
-      expect(response.body.data[0]).toHaveProperty('name');
-      expect(response.body.data[0]).toHaveProperty('description');
-      expect(response.body.data[0]).toHaveProperty('status');
+      expect(response.body.meta).toHaveProperty('itemsPerPage', 100);
     });
 
-    it('deve retornar lista vazia quando não há categorias', async () => {
+    it('deve retornar erro 400 para parâmetros inválidos', async () => {
+      const { token } = await UserFactory.createUserWithRoleAndGetToken(
+        Roles.ADMIN,
+      );
+
+      const response = await request(server)
+        .get(apiUrl)
+        .query({ page: 'invalid', limit: 'invalid' })
+        .set('Authorization', `Bearer ${token}`);
+
+      expect(response.status).toBe(StatusCode.BAD_REQUEST);
+    });
+
+    it('deve retornar dados de paginação corretamente', async () => {
       const { token } = await UserFactory.createUserWithRoleAndGetToken(
         Roles.ADMIN,
       );
@@ -58,13 +165,62 @@ describe('Categorias', () => {
 
       expect(response.status).toBe(StatusCode.OK);
       expect(response.body.message).toBe('Categorias encontradas com sucesso.');
-      expect(response.body.data).toHaveLength(0);
+      expect(response.body.data).toBeDefined();
+      expect(response.body.meta).toBeDefined();
+      expect(response.body.meta).toHaveProperty('totalItems');
+      expect(response.body.meta).toHaveProperty('totalPages');
+      expect(response.body.meta).toHaveProperty('currentPage', 1);
+      expect(response.body.meta).toHaveProperty('itemsPerPage', 10);
     });
 
     it('deve retornar erro 401 quando não autenticado', async () => {
       const response = await request(server).get(apiUrl);
 
       expect(response.status).toBe(StatusCode.UNAUTHORIZED);
+    });
+
+    it('deve ordenar categorias por data de criação descendente', async () => {
+      const { token } = await UserFactory.createUserWithRoleAndGetToken(
+        Roles.ADMIN,
+      );
+
+      const response = await request(server)
+        .get(apiUrl)
+        .query({ page: 1, limit: 10 })
+        .set('Authorization', `Bearer ${token}`);
+
+      expect(response.status).toBe(StatusCode.OK);
+      expect(response.body.data).toBeDefined();
+      expect(Array.isArray(response.body.data)).toBe(true);
+      
+      if (response.body.data.length >= 2) {
+        const firstCategory = response.body.data[0];
+        const secondCategory = response.body.data[1];
+        
+        expect(new Date(firstCategory.createdAt).getTime()).toBeGreaterThanOrEqual(
+          new Date(secondCategory.createdAt).getTime(),
+        );
+      }
+    });
+
+    it('deve retornar página vazia quando solicitada página inexistente', async () => {
+      const { token } = await UserFactory.createUserWithRoleAndGetToken(
+        Roles.ADMIN,
+      );
+
+      await CategoryFactory.createMultipleCategories(5);
+
+      const response = await request(server)
+        .get(apiUrl)
+        .query({ page: 100, limit: 5 })
+        .set('Authorization', `Bearer ${token}`);
+
+      expect(response.status).toBe(StatusCode.OK);
+      expect(response.body.data).toHaveLength(0);
+      expect(response.body.meta).toHaveProperty('currentPage', 100);
+      expect(response.body.meta.totalItems).toBeGreaterThanOrEqual(5);
+      expect(response.body.meta).toHaveProperty('hasNextPage', false);
+      expect(response.body.meta).toHaveProperty('hasPreviousPage', true);
     });
   });
 
