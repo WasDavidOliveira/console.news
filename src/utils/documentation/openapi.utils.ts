@@ -10,19 +10,14 @@ import {
 import {
   createCategorySchema,
   updateCategorySchema,
-  categoryParamsSchema,
 } from '@/validations/v1/modules/category.validations';
 import {
   createTemplateSchema,
   updateTemplateSchema,
-  templateParamsSchema,
-  templateQuerySchema,
 } from '@/validations/v1/modules/template.validations';
 import {
   createSubscriptionSchema,
   updateSubscriptionSchema,
-  subscriptionParamsSchema,
-  subscriptionQuerySchema,
 } from '@/validations/v1/modules/subscription.validations';
 
 export const generateOpenAPIDocument = () => {
@@ -531,6 +526,76 @@ export const generateOpenAPIDocument = () => {
       description: 'Resposta de erro do health check',
     });
 
+  // Schemas de resposta para Dashboard
+  const dashboardAnalyticsSchema = z
+    .object({
+      subscribers: z
+        .object({
+          active: z.number().openapi({
+            description: 'Número de assinantes ativos',
+            example: 150,
+          }),
+          total: z.number().openapi({
+            description: 'Total de assinantes',
+            example: 200,
+          }),
+        })
+        .openapi({
+          description: 'Métricas de assinantes',
+        }),
+      newsletters: z
+        .object({
+          created: z.number().openapi({
+            description: 'Número de newsletters criadas',
+            example: 45,
+          }),
+          sent: z.number().openapi({
+            description: 'Número de newsletters enviadas',
+            example: 40,
+          }),
+        })
+        .openapi({
+          description: 'Métricas de newsletters',
+        }),
+      categories: z
+        .object({
+          total: z.number().openapi({
+            description: 'Total de categorias ativas',
+            example: 8,
+          }),
+        })
+        .openapi({
+          description: 'Métricas de categorias',
+        }),
+      templates: z
+        .object({
+          active: z.number().openapi({
+            description: 'Número de templates ativos',
+            example: 12,
+          }),
+        })
+        .openapi({
+          description: 'Métricas de templates',
+        }),
+    })
+    .openapi({
+      ref: 'DashboardAnalytics',
+      description: 'Dados de analytics do dashboard',
+    });
+
+  const dashboardResponseSchema = z
+    .object({
+      message: z.string().openapi({
+        description: 'Mensagem de sucesso',
+        example: 'Analytics do dashboard obtidas com sucesso',
+      }),
+      data: dashboardAnalyticsSchema,
+    })
+    .openapi({
+      ref: 'DashboardResponse',
+      description: 'Resposta com analytics do dashboard',
+    });
+
   const document = createDocument({
     openapi: '3.0.0',
     info: {
@@ -585,6 +650,35 @@ export const generateOpenAPIDocument = () => {
                   schema: healthErrorResponseSchema,
                 },
               },
+            },
+          },
+        },
+      },
+      // Rotas de Analytics - Dashboard
+      '/api/v1/dashboard': {
+        get: {
+          tags: ['Analytics'],
+          summary: 'Obter analytics do dashboard',
+          description: 'Endpoint para obter métricas e estatísticas do dashboard incluindo assinantes, newsletters, categorias e templates',
+          security: [
+            {
+              bearerAuth: [],
+            },
+          ],
+          responses: {
+            200: {
+              description: 'Analytics obtidas com sucesso',
+              content: {
+                'application/json': {
+                  schema: dashboardResponseSchema,
+                },
+              },
+            },
+            401: {
+              description: 'Não autorizado - Token ausente ou inválido',
+            },
+            403: {
+              description: 'Acesso negado - Apenas administradores',
             },
           },
         },

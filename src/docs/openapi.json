@@ -64,6 +64,38 @@
         }
       }
     },
+    "/api/v1/dashboard": {
+      "get": {
+        "tags": [
+          "Analytics"
+        ],
+        "summary": "Obter analytics do dashboard",
+        "description": "Endpoint para obter métricas e estatísticas do dashboard incluindo assinantes, newsletters, categorias e templates",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Analytics obtidas com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DashboardResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Não autorizado - Token ausente ou inválido"
+          },
+          "403": {
+            "description": "Acesso negado - Apenas administradores"
+          }
+        }
+      }
+    },
     "/api/v1/auth/login": {
       "post": {
         "tags": [
@@ -1522,6 +1554,104 @@
           "data"
         ],
         "description": "Resposta de erro do health check"
+      },
+      "DashboardResponse": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string",
+            "description": "Mensagem de sucesso",
+            "example": "Analytics do dashboard obtidas com sucesso"
+          },
+          "data": {
+            "$ref": "#/components/schemas/DashboardAnalytics"
+          }
+        },
+        "required": [
+          "message",
+          "data"
+        ],
+        "description": "Resposta com analytics do dashboard"
+      },
+      "DashboardAnalytics": {
+        "type": "object",
+        "properties": {
+          "subscribers": {
+            "type": "object",
+            "properties": {
+              "active": {
+                "type": "number",
+                "description": "Número de assinantes ativos",
+                "example": 150
+              },
+              "total": {
+                "type": "number",
+                "description": "Total de assinantes",
+                "example": 200
+              }
+            },
+            "required": [
+              "active",
+              "total"
+            ],
+            "description": "Métricas de assinantes"
+          },
+          "newsletters": {
+            "type": "object",
+            "properties": {
+              "created": {
+                "type": "number",
+                "description": "Número de newsletters criadas",
+                "example": 45
+              },
+              "sent": {
+                "type": "number",
+                "description": "Número de newsletters enviadas",
+                "example": 40
+              }
+            },
+            "required": [
+              "created",
+              "sent"
+            ],
+            "description": "Métricas de newsletters"
+          },
+          "categories": {
+            "type": "object",
+            "properties": {
+              "total": {
+                "type": "number",
+                "description": "Total de categorias ativas",
+                "example": 8
+              }
+            },
+            "required": [
+              "total"
+            ],
+            "description": "Métricas de categorias"
+          },
+          "templates": {
+            "type": "object",
+            "properties": {
+              "active": {
+                "type": "number",
+                "description": "Número de templates ativos",
+                "example": 12
+              }
+            },
+            "required": [
+              "active"
+            ],
+            "description": "Métricas de templates"
+          }
+        },
+        "required": [
+          "subscribers",
+          "newsletters",
+          "categories",
+          "templates"
+        ],
+        "description": "Dados de analytics do dashboard"
       },
       "LoginInput": {
         "type": "object",
