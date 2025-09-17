@@ -19,7 +19,7 @@ router.get(
 router.get(
   '/:id',
   validateRequest(categoryParamsSchema),
-  CategoryController.findById,
+  CategoryController.show,
 );
 
 router.post(

@@ -10,15 +10,6 @@ export class CategoryController {
     this.categoryService = new CategoryService();
   }
 
-  show = async (req: Request, res: Response) => {
-    const categories = await this.categoryService.show();
-
-    res.status(StatusCode.OK).json({
-      message: 'Categorias encontradas com sucesso.',
-      data: categories,
-    });
-  };
-
   index = async (req: Request, res: Response) => {
     const { page, limit } = paginationQuerySchema.parse(req.query);
     const result = await this.categoryService.index(page, limit);
@@ -30,8 +21,8 @@ export class CategoryController {
     });
   };
 
-  findById = async (req: Request, res: Response) => {
-    const category = await this.categoryService.findById(Number(req.params.id));
+  show = async (req: Request, res: Response) => {
+    const category = await this.categoryService.show(Number(req.params.id));
 
     res.status(StatusCode.OK).json({
       message: 'Categoria encontrada com sucesso.',

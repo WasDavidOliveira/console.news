@@ -8,12 +8,6 @@ import { PaginatedResult } from '@/types/core/pagination.types';
 import { CategoryModel } from '@/types/models/v1/category.types';
 
 export class CategoryService {
-  async show() {
-    const categories = await CategoryRepository.findAll();
-
-    return categories;
-  }
-
   async index(
     page: number,
     limit: number,
@@ -21,7 +15,7 @@ export class CategoryService {
     return CategoryRepository.findAllPaginated(page, limit);
   }
 
-  async findById(id: number) {
+  async show(id: number) {
     const category = await CategoryRepository.findById(id);
 
     if (!category) {
