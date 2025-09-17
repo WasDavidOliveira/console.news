@@ -192,14 +192,14 @@ describe('Categorias', () => {
       expect(response.status).toBe(StatusCode.OK);
       expect(response.body.data).toBeDefined();
       expect(Array.isArray(response.body.data)).toBe(true);
-      
+
       if (response.body.data.length >= 2) {
         const firstCategory = response.body.data[0];
         const secondCategory = response.body.data[1];
-        
-        expect(new Date(firstCategory.createdAt).getTime()).toBeGreaterThanOrEqual(
-          new Date(secondCategory.createdAt).getTime(),
-        );
+
+        expect(
+          new Date(firstCategory.createdAt).getTime(),
+        ).toBeGreaterThanOrEqual(new Date(secondCategory.createdAt).getTime());
       }
     });
 
