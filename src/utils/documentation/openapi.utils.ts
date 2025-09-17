@@ -96,6 +96,56 @@ export const generateOpenAPIDocument = () => {
       description: 'Dados de uma categoria',
     });
 
+  const paginationMetaSchema = z
+    .object({
+      currentPage: z.number().openapi({
+        description: 'Página atual',
+        example: 1,
+      }),
+      totalPages: z.number().openapi({
+        description: 'Total de páginas',
+        example: 5,
+      }),
+      totalItems: z.number().openapi({
+        description: 'Total de itens',
+        example: 45,
+      }),
+      itemsPerPage: z.number().openapi({
+        description: 'Itens por página',
+        example: 10,
+      }),
+      hasNextPage: z.boolean().openapi({
+        description: 'Indica se há próxima página',
+        example: true,
+      }),
+      hasPreviousPage: z.boolean().openapi({
+        description: 'Indica se há página anterior',
+        example: false,
+      }),
+    })
+    .openapi({
+      ref: 'PaginationMeta',
+      description: 'Metadados de paginação',
+    });
+
+  const categoryPaginatedResponseSchema = z
+    .object({
+      message: z.string().openapi({
+        description: 'Mensagem de sucesso',
+        example: 'Categorias encontradas com sucesso.',
+      }),
+      data: z.array(categoryResponseSchema).openapi({
+        description: 'Lista paginada de categorias',
+      }),
+      meta: paginationMetaSchema.openapi({
+        description: 'Metadados de paginação',
+      }),
+    })
+    .openapi({
+      ref: 'CategoryPaginatedResponse',
+      description: 'Resposta com lista paginada de categorias',
+    });
+
   const categoryListResponseSchema = z
     .object({
       message: z.string().openapi({
@@ -775,21 +825,51 @@ export const generateOpenAPIDocument = () => {
       '/api/v1/categories': {
         get: {
           tags: ['Categorias'],
-          summary: 'Listar categorias',
-          description: 'Endpoint para listar todas as categorias',
+          summary: 'Listar categorias com paginação',
+          description: 'Endpoint para listar categorias com suporte a paginação. Ordena por data de criação descendente.',
           security: [
             {
               bearerAuth: [],
             },
           ],
+          parameters: [
+            {
+              name: 'page',
+              in: 'query',
+              required: false,
+              description: 'Número da página (começa em 1)',
+              schema: {
+                type: 'integer',
+                minimum: 1,
+                default: 1,
+                example: 1,
+              },
+            },
+            {
+              name: 'limit',
+              in: 'query',
+              required: false,
+              description: 'Número de itens por página (máximo 100)',
+              schema: {
+                type: 'integer',
+                minimum: 1,
+                maximum: 100,
+                default: 10,
+                example: 10,
+              },
+            },
+          ],
           responses: {
             200: {
-              description: 'Categorias listadas com sucesso',
+              description: 'Categorias encontradas com sucesso',
               content: {
                 'application/json': {
-                  schema: categoryListResponseSchema,
+                  schema: categoryPaginatedResponseSchema,
                 },
               },
+            },
+            400: {
+              description: 'Parâmetros de paginação inválidos',
             },
             401: {
               description: 'Não autorizado - Token ausente ou inválido',
@@ -864,7 +944,16 @@ export const generateOpenAPIDocument = () => {
               description: 'Categoria encontrada com sucesso',
               content: {
                 'application/json': {
-                  schema: categoryResponseSchema,
+                  schema: z.object({
+                    message: z.string().openapi({
+                      description: 'Mensagem de sucesso',
+                      example: 'Categoria encontrada com sucesso.',
+                    }),
+                    data: categoryResponseSchema,
+                  }).openapi({
+                    ref: 'CategoryShowResponse',
+                    description: 'Resposta de busca de categoria por ID',
+                  }),
                 },
               },
             },
