@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import HealthController from '@/controllers/v1/modules/health/health.controller';
+import HealthController from '@/controllers/v1/analytics/health.controller';
 import { authMiddleware } from '@/middlewares/auth/auth.middlewares';
 import { hasRole } from '@/middlewares/authorization/role.middleware';
 

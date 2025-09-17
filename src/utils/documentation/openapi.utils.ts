@@ -545,10 +545,10 @@ export const generateOpenAPIDocument = () => {
       },
     ],
     paths: {
-      // Rotas de Health Check
+      // Rotas de Analytics - Health Check
       '/api/v1/health': {
         get: {
-          tags: ['Health Check'],
+          tags: ['Analytics'],
           summary: 'Health check simples',
           description: 'Endpoint para verificar se a API está funcionando',
           responses: {
@@ -565,7 +565,7 @@ export const generateOpenAPIDocument = () => {
       },
       '/api/v1/health/detailed': {
         get: {
-          tags: ['Health Check'],
+          tags: ['Analytics'],
           summary: 'Health check detalhado',
           description:
             'Endpoint para verificar o status detalhado da API incluindo banco de dados e métricas',

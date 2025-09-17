@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { HealthService } from '@/services/v1/modules/health/health.service';
+import { HealthService } from '@/services/v1/analytics/health.service';
 import { StatusCode } from '@/constants/status-code.constants';
 
 export class HealthController {

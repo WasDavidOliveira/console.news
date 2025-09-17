@@ -6,7 +6,7 @@ import rolePermissionRoutes from '@/routes/v1/modules/role-permission/role-permi
 import roleRoutes from '@/routes/v1/modules/role/roles.routes';
 import categoryRoutes from '@/routes/v1/modules/category/category.routes';
 import templateRoutes from '@/routes/v1/modules/template/template.routes';
-import healthRoutes from '@/routes/v1/modules/health/health.routes';
+import healthRoutes from '@/routes/v1/analytics/health.routes';
 import subscriptionRoutes from '@/routes/v1/modules/subscription/subscription.routes';
 import { hasRole } from '@/middlewares/authorization/role.middleware';
 

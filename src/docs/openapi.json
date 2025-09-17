@@ -14,7 +14,9 @@
   "paths": {
     "/api/v1/health": {
       "get": {
-        "tags": ["Health Check"],
+        "tags": [
+          "Analytics"
+        ],
         "summary": "Health check simples",
         "description": "Endpoint para verificar se a API está funcionando",
         "responses": {
@@ -33,7 +35,9 @@
     },
     "/api/v1/health/detailed": {
       "get": {
-        "tags": ["Health Check"],
+        "tags": [
+          "Analytics"
+        ],
         "summary": "Health check detalhado",
         "description": "Endpoint para verificar o status detalhado da API incluindo banco de dados e métricas",
         "responses": {
@@ -62,7 +66,9 @@
     },
     "/api/v1/auth/login": {
       "post": {
-        "tags": ["Autenticação"],
+        "tags": [
+          "Autenticação"
+        ],
         "summary": "Login de usuário",
         "description": "Endpoint para autenticar um usuário existente",
         "requestBody": {
@@ -97,7 +103,9 @@
     },
     "/api/v1/auth/register": {
       "post": {
-        "tags": ["Autenticação"],
+        "tags": [
+          "Autenticação"
+        ],
         "summary": "Registro de usuário",
         "description": "Endpoint para cadastrar um novo usuário",
         "requestBody": {
@@ -129,7 +137,9 @@
     },
     "/api/v1/auth/me": {
       "get": {
-        "tags": ["Autenticação"],
+        "tags": [
+          "Autenticação"
+        ],
         "summary": "Detalhes do usuário atual",
         "description": "Endpoint para obter informações do usuário autenticado",
         "security": [
@@ -159,7 +169,9 @@
     },
     "/api/v1/categories": {
       "get": {
-        "tags": ["Categorias"],
+        "tags": [
+          "Categorias"
+        ],
         "summary": "Listar categorias",
         "description": "Endpoint para listar todas as categorias",
         "security": [
@@ -187,7 +199,9 @@
         }
       },
       "post": {
-        "tags": ["Categorias"],
+        "tags": [
+          "Categorias"
+        ],
         "summary": "Criar categoria",
         "description": "Endpoint para criar uma nova categoria",
         "security": [
@@ -216,12 +230,18 @@
                   },
                   "status": {
                     "type": "string",
-                    "enum": ["A", "I"],
+                    "enum": [
+                      "A",
+                      "I"
+                    ],
                     "default": "A",
                     "example": "A"
                   }
                 },
-                "required": ["name", "description"]
+                "required": [
+                  "name",
+                  "description"
+                ]
               }
             }
           }
@@ -251,7 +271,9 @@
     },
     "/api/v1/categories/{id}": {
       "get": {
-        "tags": ["Categorias"],
+        "tags": [
+          "Categorias"
+        ],
         "summary": "Buscar categoria por ID",
         "description": "Endpoint para buscar uma categoria específica pelo ID",
         "security": [
@@ -297,7 +319,9 @@
         }
       },
       "put": {
-        "tags": ["Categorias"],
+        "tags": [
+          "Categorias"
+        ],
         "summary": "Atualizar categoria",
         "description": "Endpoint para atualizar uma categoria existente",
         "security": [
@@ -338,7 +362,10 @@
                   },
                   "status": {
                     "type": "string",
-                    "enum": ["A", "I"],
+                    "enum": [
+                      "A",
+                      "I"
+                    ],
                     "example": "I"
                   }
                 }
@@ -372,7 +399,9 @@
         }
       },
       "delete": {
-        "tags": ["Categorias"],
+        "tags": [
+          "Categorias"
+        ],
         "summary": "Excluir categoria",
         "description": "Endpoint para excluir uma categoria",
         "security": [
@@ -420,7 +449,9 @@
     },
     "/api/v1/templates": {
       "get": {
-        "tags": ["Templates"],
+        "tags": [
+          "Templates"
+        ],
         "summary": "Listar templates",
         "description": "Endpoint para listar templates com filtros opcionais",
         "security": [
@@ -460,7 +491,9 @@
         }
       },
       "post": {
-        "tags": ["Templates"],
+        "tags": [
+          "Templates"
+        ],
         "summary": "Criar template",
         "description": "Endpoint para criar um novo template",
         "security": [
@@ -511,7 +544,10 @@
                       ]
                     },
                     "default": [],
-                    "example": ["{{title}}", "{{content}}"]
+                    "example": [
+                      "{{title}}",
+                      "{{content}}"
+                    ]
                   },
                   "isActive": {
                     "type": "boolean",
@@ -519,7 +555,10 @@
                     "example": true
                   }
                 },
-                "required": ["name", "html"]
+                "required": [
+                  "name",
+                  "html"
+                ]
               }
             }
           }
@@ -549,7 +588,9 @@
     },
     "/api/v1/templates/preview": {
       "get": {
-        "tags": ["Templates"],
+        "tags": [
+          "Templates"
+        ],
         "summary": "Preview de template",
         "description": "Endpoint para gerar preview de um template",
         "security": [
@@ -579,7 +620,9 @@
     },
     "/api/v1/templates/{id}": {
       "get": {
-        "tags": ["Templates"],
+        "tags": [
+          "Templates"
+        ],
         "summary": "Buscar template por ID",
         "description": "Endpoint para buscar um template específico pelo ID",
         "security": [
@@ -625,7 +668,9 @@
         }
       },
       "put": {
-        "tags": ["Templates"],
+        "tags": [
+          "Templates"
+        ],
         "summary": "Atualizar template",
         "description": "Endpoint para atualizar um template existente",
         "security": [
@@ -687,7 +732,10 @@
                         "{{imageUrl}}"
                       ]
                     },
-                    "example": ["{{title}}", "{{content}}"]
+                    "example": [
+                      "{{title}}",
+                      "{{content}}"
+                    ]
                   },
                   "isActive": {
                     "type": "boolean",
@@ -724,7 +772,9 @@
         }
       },
       "delete": {
-        "tags": ["Templates"],
+        "tags": [
+          "Templates"
+        ],
         "summary": "Excluir template",
         "description": "Endpoint para excluir um template",
         "security": [
@@ -772,7 +822,9 @@
     },
     "/api/v1/templates/{id}/activate": {
       "patch": {
-        "tags": ["Templates"],
+        "tags": [
+          "Templates"
+        ],
         "summary": "Ativar template",
         "description": "Endpoint para ativar um template",
         "security": [
@@ -820,7 +872,9 @@
     },
     "/api/v1/templates/{id}/deactivate": {
       "patch": {
-        "tags": ["Templates"],
+        "tags": [
+          "Templates"
+        ],
         "summary": "Desativar template",
         "description": "Endpoint para desativar um template",
         "security": [
@@ -868,7 +922,9 @@
     },
     "/api/v1/subscriptions": {
       "get": {
-        "tags": ["Inscrições"],
+        "tags": [
+          "Inscrições"
+        ],
         "summary": "Listar inscrições",
         "description": "Endpoint para listar inscrições com filtros opcionais",
         "security": [
@@ -884,7 +940,11 @@
             "description": "Filtrar por status da inscrição",
             "schema": {
               "type": "string",
-              "enum": ["A", "I", "C"],
+              "enum": [
+                "A",
+                "I",
+                "C"
+              ],
               "example": "A"
             }
           },
@@ -919,7 +979,9 @@
         }
       },
       "post": {
-        "tags": ["Inscrições"],
+        "tags": [
+          "Inscrições"
+        ],
         "summary": "Criar inscrição",
         "description": "Endpoint para criar uma nova inscrição. Se o usuário não existir, será criado automaticamente. Apenas uma inscrição ativa por usuário é permitida.",
         "requestBody": {
@@ -942,7 +1004,10 @@
                     "example": "joao@email.com"
                   }
                 },
-                "required": ["name", "email"]
+                "required": [
+                  "name",
+                  "email"
+                ]
               }
             }
           }
@@ -969,7 +1034,9 @@
     },
     "/api/v1/subscriptions/email/{email}": {
       "get": {
-        "tags": ["Inscrições"],
+        "tags": [
+          "Inscrições"
+        ],
         "summary": "Buscar inscrições por email",
         "description": "Endpoint para buscar inscrições de um usuário específico pelo email",
         "security": [
@@ -1012,7 +1079,9 @@
     },
     "/api/v1/subscriptions/{id}": {
       "get": {
-        "tags": ["Inscrições"],
+        "tags": [
+          "Inscrições"
+        ],
         "summary": "Buscar inscrição por ID",
         "description": "Endpoint para buscar uma inscrição específica pelo ID",
         "security": [
@@ -1058,7 +1127,9 @@
         }
       },
       "put": {
-        "tags": ["Inscrições"],
+        "tags": [
+          "Inscrições"
+        ],
         "summary": "Atualizar inscrição",
         "description": "Endpoint para atualizar uma inscrição existente",
         "security": [
@@ -1087,7 +1158,11 @@
                 "properties": {
                   "status": {
                     "type": "string",
-                    "enum": ["A", "I", "C"],
+                    "enum": [
+                      "A",
+                      "I",
+                      "C"
+                    ],
                     "example": "I"
                   },
                   "isActive": {
@@ -1125,7 +1200,9 @@
         }
       },
       "delete": {
-        "tags": ["Inscrições"],
+        "tags": [
+          "Inscrições"
+        ],
         "summary": "Excluir inscrição",
         "description": "Endpoint para excluir uma inscrição",
         "security": [
@@ -1173,7 +1250,9 @@
     },
     "/api/v1/subscriptions/{id}/activate": {
       "patch": {
-        "tags": ["Inscrições"],
+        "tags": [
+          "Inscrições"
+        ],
         "summary": "Ativar inscrição",
         "description": "Endpoint para ativar uma inscrição",
         "security": [
@@ -1221,7 +1300,9 @@
     },
     "/api/v1/subscriptions/{id}/deactivate": {
       "patch": {
-        "tags": ["Inscrições"],
+        "tags": [
+          "Inscrições"
+        ],
         "summary": "Desativar inscrição",
         "description": "Endpoint para desativar uma inscrição",
         "security": [
@@ -1291,7 +1372,10 @@
             "example": "2024-01-15T10:30:00.000Z"
           }
         },
-        "required": ["message", "timestamp"],
+        "required": [
+          "message",
+          "timestamp"
+        ],
         "description": "Resposta simples de health check"
       },
       "HealthDetailedResponse": {
@@ -1349,7 +1433,10 @@
                     "example": 128
                   }
                 },
-                "required": ["used", "total"],
+                "required": [
+                  "used",
+                  "total"
+                ],
                 "description": "Informações de memória"
               }
             },
@@ -1365,7 +1452,10 @@
             "description": "Dados detalhados do health check"
           }
         },
-        "required": ["message", "data"],
+        "required": [
+          "message",
+          "data"
+        ],
         "description": "Resposta detalhada de health check"
       },
       "HealthErrorResponse": {
@@ -1427,7 +1517,10 @@
             "description": "Dados de erro do health check"
           }
         },
-        "required": ["message", "data"],
+        "required": [
+          "message",
+          "data"
+        ],
         "description": "Resposta de erro do health check"
       },
       "LoginInput": {
@@ -1447,7 +1540,10 @@
             "format": "password"
           }
         },
-        "required": ["email", "password"],
+        "required": [
+          "email",
+          "password"
+        ],
         "description": "Dados para autenticação de usuário"
       },
       "LoginResponse": {
@@ -1467,7 +1563,11 @@
             "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
           }
         },
-        "required": ["message", "user", "token"],
+        "required": [
+          "message",
+          "user",
+          "token"
+        ],
         "description": "Resposta de login bem-sucedido"
       },
       "User": {
@@ -1490,7 +1590,11 @@
             "example": "usuario@exemplo.com"
           }
         },
-        "required": ["id", "name", "email"],
+        "required": [
+          "id",
+          "name",
+          "email"
+        ],
         "description": "Informações do usuário"
       },
       "RegisterInput": {
@@ -1516,7 +1620,11 @@
             "format": "password"
           }
         },
-        "required": ["name", "email", "password"],
+        "required": [
+          "name",
+          "email",
+          "password"
+        ],
         "description": "Dados para criação de um novo usuário"
       },
       "RegisterResponse": {
@@ -1531,7 +1639,10 @@
             "$ref": "#/components/schemas/User"
           }
         },
-        "required": ["message", "user"],
+        "required": [
+          "message",
+          "user"
+        ],
         "description": "Resposta de registro bem-sucedido"
       },
       "MeResponse": {
@@ -1546,7 +1657,10 @@
             "$ref": "#/components/schemas/User"
           }
         },
-        "required": ["message", "user"],
+        "required": [
+          "message",
+          "user"
+        ],
         "description": "Resposta com dados do usuário atual"
       },
       "CategoryListResponse": {
@@ -1565,7 +1679,10 @@
             "description": "Lista de categorias"
           }
         },
-        "required": ["message", "data"],
+        "required": [
+          "message",
+          "data"
+        ],
         "description": "Resposta com lista de categorias"
       },
       "CategoryResponse": {
@@ -1624,7 +1741,10 @@
             "$ref": "#/components/schemas/CategoryResponse"
           }
         },
-        "required": ["message", "data"],
+        "required": [
+          "message",
+          "data"
+        ],
         "description": "Resposta de criação de categoria"
       },
       "CategoryUpdateResponse": {
@@ -1639,7 +1759,10 @@
             "$ref": "#/components/schemas/CategoryResponse"
           }
         },
-        "required": ["message", "data"],
+        "required": [
+          "message",
+          "data"
+        ],
         "description": "Resposta de atualização de categoria"
       },
       "CategoryDeleteResponse": {
@@ -1651,7 +1774,9 @@
             "example": "Categoria excluída com sucesso"
           }
         },
-        "required": ["message"],
+        "required": [
+          "message"
+        ],
         "description": "Resposta de exclusão de categoria"
       },
       "TemplateListResponse": {
@@ -1670,7 +1795,10 @@
             "description": "Lista de templates"
           }
         },
-        "required": ["message", "data"],
+        "required": [
+          "message",
+          "data"
+        ],
         "description": "Resposta com lista de templates"
       },
       "TemplateResponse": {
@@ -1715,7 +1843,10 @@
               "type": "string"
             },
             "description": "Variáveis disponíveis no template",
-            "example": ["TITLE", "CONTENT"]
+            "example": [
+              "TITLE",
+              "CONTENT"
+            ]
           },
           "isActive": {
             "type": "boolean",
@@ -1759,7 +1890,10 @@
             "$ref": "#/components/schemas/TemplateResponse"
           }
         },
-        "required": ["message", "data"],
+        "required": [
+          "message",
+          "data"
+        ],
         "description": "Resposta de criação de template"
       },
       "TemplatePreviewResponse": {
@@ -1776,7 +1910,10 @@
             "example": "<html><body><h1>Exemplo de Título</h1><div>Exemplo de conteúdo</div></body></html>"
           }
         },
-        "required": ["message", "preview"],
+        "required": [
+          "message",
+          "preview"
+        ],
         "description": "Resposta de preview do template"
       },
       "TemplateUpdateResponse": {
@@ -1791,7 +1928,10 @@
             "$ref": "#/components/schemas/TemplateResponse"
           }
         },
-        "required": ["message", "data"],
+        "required": [
+          "message",
+          "data"
+        ],
         "description": "Resposta de atualização de template"
       },
       "TemplateDeleteResponse": {
@@ -1803,7 +1943,9 @@
             "example": "Template excluído com sucesso"
           }
         },
-        "required": ["message"],
+        "required": [
+          "message"
+        ],
         "description": "Resposta de exclusão de template"
       },
       "TemplateActivateResponse": {
@@ -1818,7 +1960,10 @@
             "$ref": "#/components/schemas/TemplateResponse"
           }
         },
-        "required": ["message", "data"],
+        "required": [
+          "message",
+          "data"
+        ],
         "description": "Resposta de ativação de template"
       },
       "TemplateDeactivateResponse": {
@@ -1833,7 +1978,10 @@
             "$ref": "#/components/schemas/TemplateResponse"
           }
         },
-        "required": ["message", "data"],
+        "required": [
+          "message",
+          "data"
+        ],
         "description": "Resposta de desativação de template"
       },
       "SubscriptionListResponse": {
@@ -1852,7 +2000,10 @@
             "description": "Lista de inscrições"
           }
         },
-        "required": ["message", "data"],
+        "required": [
+          "message",
+          "data"
+        ],
         "description": "Resposta com lista de inscrições"
       },
       "SubscriptionResponse": {
@@ -1911,7 +2062,10 @@
             "$ref": "#/components/schemas/SubscriptionResponse"
           }
         },
-        "required": ["message", "data"],
+        "required": [
+          "message",
+          "data"
+        ],
         "description": "Resposta de criação de inscrição"
       },
       "SubscriptionUpdateResponse": {
@@ -1926,7 +2080,10 @@
             "$ref": "#/components/schemas/SubscriptionResponse"
           }
         },
-        "required": ["message", "data"],
+        "required": [
+          "message",
+          "data"
+        ],
         "description": "Resposta de atualização de inscrição"
       },
       "SubscriptionDeleteResponse": {
@@ -1938,7 +2095,9 @@
             "example": "Inscrição removida com sucesso"
           }
         },
-        "required": ["message"],
+        "required": [
+          "message"
+        ],
         "description": "Resposta de remoção de inscrição"
       },
       "SubscriptionActivateResponse": {
@@ -1953,7 +2112,10 @@
             "$ref": "#/components/schemas/SubscriptionResponse"
           }
         },
-        "required": ["message", "data"],
+        "required": [
+          "message",
+          "data"
+        ],
         "description": "Resposta de ativação de inscrição"
       },
       "SubscriptionDeactivateResponse": {
@@ -1968,7 +2130,10 @@
             "$ref": "#/components/schemas/SubscriptionResponse"
           }
         },
-        "required": ["message", "data"],
+        "required": [
+          "message",
+          "data"
+        ],
         "description": "Resposta de desativação de inscrição"
       }
     }
