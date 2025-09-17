@@ -14,7 +14,7 @@ import dashboardRoutes from '@/routes/v1/analytics/dashboard.routes';
 const router: Router = Router();
 
 router.use('/health', healthRoutes);
-router.use('/dashboard', dashboardRoutes);
+router.use('/dashboard', authMiddleware, hasRole('admin'), dashboardRoutes);
 router.use('/auth', authRoutes);
 router.use('/subscriptions', subscriptionRoutes);
 router.use('/permissions', authMiddleware, permissionRoutes);
