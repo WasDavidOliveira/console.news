@@ -9,10 +9,12 @@ import templateRoutes from '@/routes/v1/modules/template/template.routes';
 import healthRoutes from '@/routes/v1/analytics/health.routes';
 import subscriptionRoutes from '@/routes/v1/modules/subscription/subscription.routes';
 import { hasRole } from '@/middlewares/authorization/role.middleware';
+import dashboardRoutes from '@/routes/v1/analytics/dashboard.routes';
 
 const router: Router = Router();
 
 router.use('/health', healthRoutes);
+router.use('/dashboard', dashboardRoutes);
 router.use('/auth', authRoutes);
 router.use('/subscriptions', subscriptionRoutes);
 router.use('/permissions', authMiddleware, permissionRoutes);
