@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { paginationQuerySchema } from '@/validations/core/pagination.validations';
+import { categoryPaginationSchema } from '@/validations/v1/modules/category.validations';
 
 describe('Pagination Validations', () => {
   describe('paginationQuerySchema', () => {
@@ -146,6 +147,90 @@ describe('Pagination Validations', () => {
         page: 2,
         limit: 15,
       });
+    });
+  });
+});
+
+describe('Category Pagination Validations', () => {
+
+  describe('categoryPaginationSchema', () => {
+    it('deve validar parâmetros com perPage', () => {
+      const result = categoryPaginationSchema.parse({
+        query: {
+          page: '2',
+          limit: '10',
+          perPage: '15',
+        },
+      });
+
+      expect(result.query).toEqual({
+        page: 2,
+        limit: 10,
+        perPage: 15,
+      });
+    });
+
+    it('deve usar limit quando perPage não é fornecido', () => {
+      const result = categoryPaginationSchema.parse({
+        query: {
+          page: '1',
+          limit: '20',
+        },
+      });
+
+      expect(result.query).toEqual({
+        page: 1,
+        limit: 20,
+        perPage: undefined,
+      });
+    });
+
+    it('deve rejeitar perPage maior que 100', () => {
+      expect(() => {
+        categoryPaginationSchema.parse({
+          query: {
+            page: '1',
+            limit: '10',
+            perPage: '150',
+          },
+        });
+      }).toThrow('PerPage deve estar entre 1 e 100');
+    });
+
+    it('deve rejeitar perPage menor que 1', () => {
+      expect(() => {
+        categoryPaginationSchema.parse({
+          query: {
+            page: '1',
+            limit: '10',
+            perPage: '0',
+          },
+        });
+      }).toThrow('PerPage deve estar entre 1 e 100');
+    });
+
+    it('deve aceitar perPage no limite máximo (100)', () => {
+      const result = categoryPaginationSchema.parse({
+        query: {
+          page: '1',
+          limit: '10',
+          perPage: '100',
+        },
+      });
+
+      expect(result.query.perPage).toBe(100);
+    });
+
+    it('deve aceitar perPage no limite mínimo (1)', () => {
+      const result = categoryPaginationSchema.parse({
+        query: {
+          page: '1',
+          limit: '10',
+          perPage: '1',
+        },
+      });
+
+      expect(result.query.perPage).toBe(1);
     });
   });
 });

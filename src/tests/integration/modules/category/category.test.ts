@@ -125,6 +125,36 @@ describe('Categorias', () => {
       expect(response.body.meta).toHaveProperty('itemsPerPage', 100);
     });
 
+    it('deve usar perPage quando fornecido, sobrescrevendo limit', async () => {
+      const { token } = await UserFactory.createUserWithRoleAndGetToken(
+        Roles.ADMIN,
+      );
+
+      await CategoryFactory.createMultipleCategories(10);
+
+      const response = await request(server)
+        .get(apiUrl)
+        .query({ page: '1', limit: '10', perPage: '5' })
+        .set('Authorization', `Bearer ${token}`);
+
+      expect(response.status).toBe(StatusCode.OK);
+      expect(response.body.data.length).toBeLessThanOrEqual(5);
+      expect(response.body.meta).toHaveProperty('itemsPerPage', 5);
+    });
+
+    it('deve validar perPage dentro dos limites', async () => {
+      const { token } = await UserFactory.createUserWithRoleAndGetToken(
+        Roles.ADMIN,
+      );
+
+      const response = await request(server)
+        .get(apiUrl)
+        .query({ page: '1', perPage: '150' })
+        .set('Authorization', `Bearer ${token}`);
+
+      expect(response.status).toBe(StatusCode.BAD_REQUEST);
+    });
+
     it('deve validar limite máximo de 100', async () => {
       const { token } = await UserFactory.createUserWithRoleAndGetToken(
         Roles.ADMIN,

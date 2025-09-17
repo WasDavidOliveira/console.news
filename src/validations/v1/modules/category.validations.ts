@@ -87,6 +87,17 @@ export const categoryPaginationSchema = z.object({
         message: 'Limite deve estar entre 1 e 100',
       })
       .openapi({ example: 10 }),
+    perPage: z
+      .string()
+      .optional()
+      .transform(val => val ? parseInt(val, 10) : undefined)
+      .refine(val => val === undefined || (val >= 1 && val <= 100), {
+        message: 'PerPage deve estar entre 1 e 100',
+      })
+      .openapi({ 
+        example: 15,
+        description: 'Número específico de itens por página (sobrescreve limit)',
+      }),
   }),
 });
 

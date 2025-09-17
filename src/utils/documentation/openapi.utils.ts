@@ -826,7 +826,8 @@ export const generateOpenAPIDocument = () => {
         get: {
           tags: ['Categorias'],
           summary: 'Listar categorias com paginação',
-          description: 'Endpoint para listar categorias com suporte a paginação. Ordena por data de criação descendente.',
+          description:
+            'Endpoint para listar categorias com suporte a paginação. Ordena por data de criação descendente.',
           security: [
             {
               bearerAuth: [],
@@ -856,6 +857,19 @@ export const generateOpenAPIDocument = () => {
                 maximum: 100,
                 default: 10,
                 example: 10,
+              },
+            },
+            {
+              name: 'perPage',
+              in: 'query',
+              required: false,
+              description:
+                'Número específico de itens por página (sobrescreve limit, máximo 100)',
+              schema: {
+                type: 'integer',
+                minimum: 1,
+                maximum: 100,
+                example: 15,
               },
             },
           ],
@@ -944,16 +958,18 @@ export const generateOpenAPIDocument = () => {
               description: 'Categoria encontrada com sucesso',
               content: {
                 'application/json': {
-                  schema: z.object({
-                    message: z.string().openapi({
-                      description: 'Mensagem de sucesso',
-                      example: 'Categoria encontrada com sucesso.',
+                  schema: z
+                    .object({
+                      message: z.string().openapi({
+                        description: 'Mensagem de sucesso',
+                        example: 'Categoria encontrada com sucesso.',
+                      }),
+                      data: categoryResponseSchema,
+                    })
+                    .openapi({
+                      ref: 'CategoryShowResponse',
+                      description: 'Resposta de busca de categoria por ID',
                     }),
-                    data: categoryResponseSchema,
-                  }).openapi({
-                    ref: 'CategoryShowResponse',
-                    description: 'Resposta de busca de categoria por ID',
-                  }),
                 },
               },
             },
