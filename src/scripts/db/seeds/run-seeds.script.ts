@@ -5,6 +5,9 @@ import { seedRolePermissions } from '@/db/seeds/role-permissions.seeds';
 import { seedUserRoles } from '@/db/seeds/user-roles.seeds';
 import { logger } from '@/utils/core/logger.utils';
 import { seedTemplates } from '@/db/seeds/template.seeds';
+import { seedCategories } from '@/db/seeds/category.seeds';
+import { seedSubscriptions } from '@/db/seeds/subscription.seeds';
+import { seedNewsletters } from '@/db/seeds/newsletter.seeds';
 
 async function runAllSeeds() {
   try {
@@ -16,6 +19,9 @@ async function runAllSeeds() {
     await seedRolePermissions();
     await seedUserRoles();
     await seedTemplates();
+    await seedCategories();
+    await seedSubscriptions();
+    await seedNewsletters();
 
     logger.info('All seeds completed successfully');
     process.exit(0);
