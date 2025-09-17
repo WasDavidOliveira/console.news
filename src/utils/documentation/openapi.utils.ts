@@ -659,7 +659,8 @@ export const generateOpenAPIDocument = () => {
         get: {
           tags: ['Analytics'],
           summary: 'Obter analytics do dashboard',
-          description: 'Endpoint para obter métricas e estatísticas do dashboard incluindo assinantes, newsletters, categorias e templates',
+          description:
+            'Endpoint para obter métricas e estatísticas do dashboard incluindo assinantes, newsletters, categorias e templates',
           security: [
             {
               bearerAuth: [],
