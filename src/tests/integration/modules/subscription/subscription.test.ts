@@ -107,8 +107,6 @@ describe('Subscription', () => {
         .get(apiUrl)
         .set('Authorization', `Bearer ${token}`);
 
-      console.log(response.body);
-
       expect(response.status).toBe(StatusCode.OK);
       expect(response.body.message).toBe('Inscrições encontradas com sucesso');
       expect(Array.isArray(response.body.data)).toBe(true);
