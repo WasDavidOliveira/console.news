@@ -8,7 +8,6 @@ import UserRepository from '@/repositories/v1/modules/auth/user.repository';
 import {
   CreateSubscriptionSchema,
   UpdateSubscriptionSchema,
-  SubscriptionQuerySchema,
 } from '@/validations/v1/modules/subscription.validations';
 import bcrypt from 'bcrypt';
 import { EmailService } from '@/services/infrastructure';
@@ -21,14 +20,6 @@ export class SubscriptionService {
 
   constructor() {
     this.emailService = new EmailService();
-  }
-
-  async index(query?: SubscriptionQuerySchema) {
-    if (query) {
-      return SubscriptionRepository.findByQuery(query);
-    }
-
-    return SubscriptionRepository.findAll();
   }
 
   async indexPaginated(
