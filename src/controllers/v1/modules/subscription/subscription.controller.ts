@@ -2,7 +2,7 @@ import { Request, Response } from 'express';
 import { SubscriptionService } from '@/services/v1/modules/subscription/subscription.service';
 import { SubscriptionResource } from '@/resources/v1/modules/subscription/subscription.resource';
 import { StatusCode } from '@/constants/status-code.constants';
-import { SubscriptionQuerySchema } from '@/validations/v1/modules/subscription.validations';
+import { subscriptionPaginationSchema } from '@/validations/v1/modules/subscription.validations';
 
 export class SubscriptionController {
   protected subscriptionService: SubscriptionService;
@@ -12,12 +12,28 @@ export class SubscriptionController {
   }
 
   index = async (req: Request, res: Response) => {
-    const query = req.query as SubscriptionQuerySchema;
-    const subscriptions = await this.subscriptionService.index(query);
+    const { query } = subscriptionPaginationSchema.parse(req);
+    const finalLimit = query.perPage ?? query.limit;
+
+    const filters = {
+      status: query.status,
+      isActive: query.isActive,
+      name: query.name,
+      email: query.email,
+      createdAtFrom: query.createdAtFrom,
+      createdAtTo: query.createdAtTo,
+    };
+
+    const result = await this.subscriptionService.indexPaginated(
+      query.page,
+      finalLimit,
+      filters,
+    );
 
     res.status(StatusCode.OK).json({
       message: 'Inscrições encontradas com sucesso',
-      data: SubscriptionResource.collectionToResponse(subscriptions),
+      data: SubscriptionResource.collectionToResponse(result.data),
+      meta: result.meta,
     });
   };
 

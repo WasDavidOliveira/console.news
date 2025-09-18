@@ -378,6 +378,24 @@ export const generateOpenAPIDocument = () => {
       description: 'Resposta com lista de inscrições',
     });
 
+  const subscriptionPaginatedResponseSchema = z
+    .object({
+      message: z.string().openapi({
+        description: 'Mensagem de sucesso',
+        example: 'Inscrições encontradas com sucesso',
+      }),
+      data: z.array(subscriptionResponseSchema).openapi({
+        description: 'Lista paginada de inscrições',
+      }),
+      meta: paginationMetaSchema.openapi({
+        description: 'Metadados de paginação',
+      }),
+    })
+    .openapi({
+      ref: 'SubscriptionPaginatedResponse',
+      description: 'Resposta com lista paginada de inscrições',
+    });
+
   const subscriptionCreateResponseSchema = z
     .object({
       message: z.string().openapi({
@@ -1413,14 +1431,53 @@ export const generateOpenAPIDocument = () => {
       '/api/v1/subscriptions': {
         get: {
           tags: ['Inscrições'],
-          summary: 'Listar inscrições',
-          description: 'Endpoint para listar inscrições com filtros opcionais',
+          summary: 'Listar inscrições com paginação',
+          description:
+            'Endpoint para listar inscrições com suporte a paginação e filtros opcionais. Ordena por data de criação descendente.',
           security: [
             {
               bearerAuth: [],
             },
           ],
           parameters: [
+            {
+              name: 'page',
+              in: 'query',
+              required: false,
+              description: 'Número da página (começa em 1)',
+              schema: {
+                type: 'integer',
+                minimum: 1,
+                default: 1,
+                example: 1,
+              },
+            },
+            {
+              name: 'limit',
+              in: 'query',
+              required: false,
+              description: 'Número de itens por página (máximo 100)',
+              schema: {
+                type: 'integer',
+                minimum: 1,
+                maximum: 100,
+                default: 10,
+                example: 10,
+              },
+            },
+            {
+              name: 'perPage',
+              in: 'query',
+              required: false,
+              description:
+                'Número específico de itens por página (sobrescreve limit, máximo 100)',
+              schema: {
+                type: 'integer',
+                minimum: 1,
+                maximum: 100,
+                example: 15,
+              },
+            },
             {
               name: 'status',
               in: 'query',
@@ -1442,15 +1499,62 @@ export const generateOpenAPIDocument = () => {
                 example: true,
               },
             },
+            {
+              name: 'name',
+              in: 'query',
+              required: false,
+              description: 'Filtrar por nome do usuário (busca parcial)',
+              schema: {
+                type: 'string',
+                example: 'João Silva',
+              },
+            },
+            {
+              name: 'email',
+              in: 'query',
+              required: false,
+              description: 'Filtrar por email do usuário (busca parcial)',
+              schema: {
+                type: 'string',
+                example: 'joao@email.com',
+              },
+            },
+            {
+              name: 'createdAtFrom',
+              in: 'query',
+              required: false,
+              description:
+                'Filtrar inscrições criadas a partir desta data (YYYY-MM-DD)',
+              schema: {
+                type: 'string',
+                format: 'date',
+                example: '2024-01-01',
+              },
+            },
+            {
+              name: 'createdAtTo',
+              in: 'query',
+              required: false,
+              description:
+                'Filtrar inscrições criadas até esta data (YYYY-MM-DD)',
+              schema: {
+                type: 'string',
+                format: 'date',
+                example: '2024-12-31',
+              },
+            },
           ],
           responses: {
             200: {
-              description: 'Inscrições listadas com sucesso',
+              description: 'Inscrições encontradas com sucesso',
               content: {
                 'application/json': {
-                  schema: subscriptionListResponseSchema,
+                  schema: subscriptionPaginatedResponseSchema,
                 },
               },
+            },
+            400: {
+              description: 'Parâmetros de paginação inválidos',
             },
             401: {
               description: 'Não autorizado - Token ausente ou inválido',

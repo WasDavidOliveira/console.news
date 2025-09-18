@@ -12,6 +12,9 @@ import {
 } from '@/validations/v1/modules/subscription.validations';
 import bcrypt from 'bcrypt';
 import { EmailService } from '@/services/infrastructure';
+import { PaginatedResult } from '@/types/core/pagination.types';
+import { SubscriptionModel } from '@/types/models/v1/subscription.types';
+import { SubscriptionStatus } from '@/enums/v1/modules/subscription/subscription-status.enum';
 
 export class SubscriptionService {
   protected emailService: EmailService;
@@ -22,10 +25,25 @@ export class SubscriptionService {
 
   async index(query?: SubscriptionQuerySchema) {
     if (query) {
-      return await SubscriptionRepository.findByQuery(query);
+      return SubscriptionRepository.findByQuery(query);
     }
 
-    return await SubscriptionRepository.findAll();
+    return SubscriptionRepository.findAll();
+  }
+
+  async indexPaginated(
+    page: number,
+    limit: number,
+    filters?: {
+      status?: SubscriptionStatus;
+      isActive?: boolean;
+      name?: string;
+      email?: string;
+      createdAtFrom?: Date;
+      createdAtTo?: Date;
+    },
+  ): Promise<PaginatedResult<SubscriptionModel>> {
+    return SubscriptionRepository.findAllPaginated(page, limit, filters);
   }
 
   async show(id: number) {

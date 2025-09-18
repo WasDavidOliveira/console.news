@@ -4,7 +4,7 @@ import {
   createSubscriptionSchema,
   updateSubscriptionSchema,
   subscriptionParamsSchema,
-  subscriptionQuerySchema,
+  subscriptionPaginationSchema,
 } from '@/validations/v1/modules/subscription.validations';
 import { validateRequest } from '@/middlewares/validation/validate-request.middlewares';
 import { authMiddleware } from '@/middlewares/auth/auth.middlewares';
@@ -16,7 +16,7 @@ router.get(
   '/',
   authMiddleware,
   hasRole('admin'),
-  validateRequest(subscriptionQuerySchema),
+  validateRequest(subscriptionPaginationSchema),
   SubscriptionController.index,
 );
 

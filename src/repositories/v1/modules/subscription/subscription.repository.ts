@@ -1,13 +1,17 @@
 import { subscriptions } from '@/db/schema/v1/subscription.schema';
 import { user } from '@/db/schema/v1/user.schema';
 import { db } from '@/db/db.connection';
-import { eq, and } from 'drizzle-orm';
+import { eq, and, desc, like, gte, lte } from 'drizzle-orm';
+import { count } from 'drizzle-orm';
 import {
   SubscriptionModel,
   CreateSubscriptionModel,
   UpdateSubscriptionModel,
 } from '@/types/models/v1/subscription.types';
 import { SubscriptionQuerySchema } from '@/validations/v1/modules/subscription.validations';
+import PaginationUtils from '@/utils/core/pagination.utils';
+import { PaginatedResult } from '@/types/core/pagination.types';
+import { SubscriptionStatus } from '@/enums/v1/modules/subscription/subscription-status.enum';
 
 export class SubscriptionRepository {
   async findById(id: number): Promise<SubscriptionModel | null> {
@@ -26,6 +30,99 @@ export class SubscriptionRepository {
     return subscriptionsResults;
   }
 
+  async findAllPaginated(
+    page: number,
+    limit: number,
+    filters?: {
+      status?: SubscriptionStatus;
+      isActive?: boolean;
+      name?: string;
+      email?: string;
+      createdAtFrom?: Date;
+      createdAtTo?: Date;
+    },
+  ): Promise<PaginatedResult<SubscriptionModel>> {
+    const whereConditions = [];
+
+    if (filters?.status) {
+      whereConditions.push(eq(subscriptions.status, filters.status));
+    }
+
+    if (filters?.isActive !== undefined) {
+      whereConditions.push(eq(subscriptions.isActive, filters.isActive));
+    }
+
+    if (filters?.name) {
+      whereConditions.push(like(user.name, `%${filters.name}%`));
+    }
+
+    if (filters?.email) {
+      whereConditions.push(like(user.email, `%${filters.email}%`));
+    }
+
+    if (filters?.createdAtFrom) {
+      whereConditions.push(gte(subscriptions.createdAt, filters.createdAtFrom));
+    }
+
+    if (filters?.createdAtTo) {
+      whereConditions.push(lte(subscriptions.createdAt, filters.createdAtTo));
+    }
+
+    const whereClause =
+      whereConditions.length > 0 ? and(...whereConditions) : undefined;
+
+    const validatedParams = PaginationUtils.validatePaginationParams(
+      page,
+      limit,
+    );
+    const offset = PaginationUtils.calculateOffset(
+      validatedParams.page,
+      validatedParams.limit,
+    );
+
+    let countQuery = db
+      .select({ count: count() })
+      .from(subscriptions)
+      .innerJoin(user, eq(subscriptions.userId, user.id));
+
+    let dataQuery = db
+      .select({
+        id: subscriptions.id,
+        userId: subscriptions.userId,
+        status: subscriptions.status,
+        isActive: subscriptions.isActive,
+        createdAt: subscriptions.createdAt,
+        updatedAt: subscriptions.updatedAt,
+      })
+      .from(subscriptions)
+      .innerJoin(user, eq(subscriptions.userId, user.id));
+
+    if (whereClause) {
+      countQuery = countQuery.where(whereClause) as typeof countQuery;
+      dataQuery = dataQuery.where(whereClause) as typeof dataQuery;
+    }
+
+    dataQuery = dataQuery.orderBy(
+      desc(subscriptions.createdAt),
+    ) as typeof dataQuery;
+
+    const [countResult] = await countQuery;
+    const totalItems = countResult.count;
+
+    const data = await dataQuery.limit(validatedParams.limit).offset(offset);
+
+    const meta = PaginationUtils.createPaginationMeta(
+      validatedParams.page,
+      validatedParams.limit,
+      totalItems,
+    );
+
+    return {
+      data: data as SubscriptionModel[],
+      meta,
+    };
+  }
+
   async findByQuery(
     query: SubscriptionQuerySchema,
   ): Promise<SubscriptionModel[]> {
@@ -40,17 +137,17 @@ export class SubscriptionRepository {
     }
 
     if (conditions.length > 0) {
-      return await db
+      return db
         .select()
         .from(subscriptions)
         .where(and(...conditions));
     }
 
-    return await db.select().from(subscriptions);
+    return db.select().from(subscriptions);
   }
 
   async findByUserId(userId: number): Promise<SubscriptionModel[]> {
-    return await db
+    return db
       .select()
       .from(subscriptions)
       .where(eq(subscriptions.userId, userId));
@@ -69,7 +166,7 @@ export class SubscriptionRepository {
   }
 
   async findByEmail(email: string): Promise<SubscriptionModel[]> {
-    return await db
+    return db
       .select({
         id: subscriptions.id,
         userId: subscriptions.userId,
