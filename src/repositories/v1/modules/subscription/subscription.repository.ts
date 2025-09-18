@@ -7,6 +7,7 @@ import {
   SubscriptionModel,
   CreateSubscriptionModel,
   UpdateSubscriptionModel,
+  SubscriptionWithUserModel,
 } from '@/types/models/v1/subscription.types';
 import { SubscriptionQuerySchema } from '@/validations/v1/modules/subscription.validations';
 import PaginationUtils from '@/utils/core/pagination.utils';
@@ -41,7 +42,7 @@ export class SubscriptionRepository {
       createdAtFrom?: Date;
       createdAtTo?: Date;
     },
-  ): Promise<PaginatedResult<SubscriptionModel>> {
+  ): Promise<PaginatedResult<SubscriptionWithUserModel>> {
     const whereConditions = [];
 
     if (filters?.status) {
@@ -93,6 +94,14 @@ export class SubscriptionRepository {
         isActive: subscriptions.isActive,
         createdAt: subscriptions.createdAt,
         updatedAt: subscriptions.updatedAt,
+        user: {
+          id: user.id,
+          name: user.name,
+          email: user.email,
+          status: user.status,
+          createdAt: user.createdAt,
+          updatedAt: user.updatedAt,
+        },
       })
       .from(subscriptions)
       .innerJoin(user, eq(subscriptions.userId, user.id));
@@ -118,7 +127,7 @@ export class SubscriptionRepository {
     );
 
     return {
-      data: data as SubscriptionModel[],
+      data: data as SubscriptionWithUserModel[],
       meta,
     };
   }

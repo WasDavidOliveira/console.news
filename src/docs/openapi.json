@@ -2372,6 +2372,14 @@
             "type": "string",
             "description": "Data de atualização",
             "example": "2024-01-15T10:30:00Z"
+          },
+          "user": {
+            "description": "Dados do usuário da inscrição",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/SubscriptionUserResponse"
+              }
+            ]
           }
         },
         "required": [
@@ -2380,9 +2388,54 @@
           "status",
           "isActive",
           "createdAt",
+          "updatedAt",
+          "user"
+        ],
+        "description": "Dados de uma inscrição com informações do usuário"
+      },
+      "SubscriptionUserResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number",
+            "description": "ID único do usuário",
+            "example": 1
+          },
+          "name": {
+            "type": "string",
+            "description": "Nome do usuário",
+            "example": "João Silva"
+          },
+          "email": {
+            "type": "string",
+            "description": "Email do usuário",
+            "example": "joao@email.com"
+          },
+          "status": {
+            "type": "string",
+            "description": "Status do usuário",
+            "example": "A"
+          },
+          "createdAt": {
+            "type": "string",
+            "description": "Data de criação do usuário",
+            "example": "2024-01-15T10:30:00Z"
+          },
+          "updatedAt": {
+            "type": "string",
+            "description": "Data de atualização do usuário",
+            "example": "2024-01-15T10:30:00Z"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "email",
+          "status",
+          "createdAt",
           "updatedAt"
         ],
-        "description": "Dados de uma inscrição"
+        "description": "Dados de um usuário em subscription"
       },
       "SubscriptionCreateResponse": {
         "type": "object",

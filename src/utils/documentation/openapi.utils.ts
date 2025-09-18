@@ -330,7 +330,38 @@ export const generateOpenAPIDocument = () => {
       description: 'Resposta de preview do template',
     });
 
-  // Schemas de resposta para Subscription
+  const subscriptionUserResponseSchema = z
+    .object({
+      id: z.number().openapi({
+        description: 'ID único do usuário',
+        example: 1,
+      }),
+      name: z.string().openapi({
+        description: 'Nome do usuário',
+        example: 'João Silva',
+      }),
+      email: z.string().openapi({
+        description: 'Email do usuário',
+        example: 'joao@email.com',
+      }),
+      status: z.string().openapi({
+        description: 'Status do usuário',
+        example: 'A',
+      }),
+      createdAt: z.string().openapi({
+        description: 'Data de criação do usuário',
+        example: '2024-01-15T10:30:00Z',
+      }),
+      updatedAt: z.string().openapi({
+        description: 'Data de atualização do usuário',
+        example: '2024-01-15T10:30:00Z',
+      }),
+    })
+    .openapi({
+      ref: 'SubscriptionUserResponse',
+      description: 'Dados de um usuário em subscription',
+    });
+
   const subscriptionResponseSchema = z
     .object({
       id: z.number().openapi({
@@ -357,10 +388,13 @@ export const generateOpenAPIDocument = () => {
         description: 'Data de atualização',
         example: '2024-01-15T10:30:00Z',
       }),
+      user: subscriptionUserResponseSchema.openapi({
+        description: 'Dados do usuário da inscrição',
+      }),
     })
     .openapi({
       ref: 'SubscriptionResponse',
-      description: 'Dados de uma inscrição',
+      description: 'Dados de uma inscrição com informações do usuário',
     });
 
   const subscriptionListResponseSchema = z

@@ -12,8 +12,8 @@ import {
 import bcrypt from 'bcrypt';
 import { EmailService } from '@/services/infrastructure';
 import { PaginatedResult } from '@/types/core/pagination.types';
-import { SubscriptionModel } from '@/types/models/v1/subscription.types';
 import { SubscriptionStatus } from '@/enums/v1/modules/subscription/subscription-status.enum';
+import { SubscriptionWithUserModel } from '@/types/models/v1/subscription.types';
 
 export class SubscriptionService {
   protected emailService: EmailService;
@@ -33,7 +33,7 @@ export class SubscriptionService {
       createdAtFrom?: Date;
       createdAtTo?: Date;
     },
-  ): Promise<PaginatedResult<SubscriptionModel>> {
+  ): Promise<PaginatedResult<SubscriptionWithUserModel>> {
     return SubscriptionRepository.findAllPaginated(page, limit, filters);
   }
 

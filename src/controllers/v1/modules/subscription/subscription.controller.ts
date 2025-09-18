@@ -32,7 +32,17 @@ export class SubscriptionController {
 
     res.status(StatusCode.OK).json({
       message: 'Inscrições encontradas com sucesso',
-      data: SubscriptionResource.collectionToResponse(result.data),
+      data: result.data.map(subscription => ({
+        ...SubscriptionResource.toResponse(subscription),
+        user: {
+          id: subscription.user.id,
+          name: subscription.user.name,
+          email: subscription.user.email,
+          status: subscription.user.status,
+          createdAt: subscription.user.createdAt,
+          updatedAt: subscription.user.updatedAt,
+        },
+      })),
       meta: result.meta,
     });
   };
