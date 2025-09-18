@@ -146,21 +146,6 @@ export const generateOpenAPIDocument = () => {
       description: 'Resposta com lista paginada de categorias',
     });
 
-  const categoryListResponseSchema = z
-    .object({
-      message: z.string().openapi({
-        description: 'Mensagem de sucesso',
-        example: 'Categorias listadas com sucesso',
-      }),
-      data: z.array(categoryResponseSchema).openapi({
-        description: 'Lista de categorias',
-      }),
-    })
-    .openapi({
-      ref: 'CategoryListResponse',
-      description: 'Resposta com lista de categorias',
-    });
-
   const categoryCreateResponseSchema = z
     .object({
       message: z.string().openapi({

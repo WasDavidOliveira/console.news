@@ -152,7 +152,6 @@ describe('Pagination Validations', () => {
 });
 
 describe('Category Pagination Validations', () => {
-
   describe('categoryPaginationSchema', () => {
     it('deve validar parâmetros com perPage', () => {
       const result = categoryPaginationSchema.parse({
