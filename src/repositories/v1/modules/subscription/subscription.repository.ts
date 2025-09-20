@@ -236,6 +236,27 @@ export class SubscriptionRepository {
 
     return activatedSubscription;
   }
+
+  async findActiveSubscriptionsWithUsers() {
+    return db
+      .select({
+        id: subscriptions.id,
+        userId: subscriptions.userId,
+        user: {
+          id: user.id,
+          name: user.name,
+          email: user.email,
+        },
+      })
+      .from(subscriptions)
+      .innerJoin(user, eq(subscriptions.userId, user.id))
+      .where(
+        and(
+          eq(subscriptions.status, SubscriptionStatus.ACTIVE),
+          eq(subscriptions.isActive, true),
+        ),
+      );
+  }
 }
 
 export default new SubscriptionRepository();
